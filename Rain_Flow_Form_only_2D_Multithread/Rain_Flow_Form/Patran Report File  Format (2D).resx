@@ -1,0 +1,366 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="richTextBox1.Text" xml:space="preserve">
+    <value>
+
+
+
+
+                       MSC.Patran 18.0.115609 Thu Aug 18 10:00:09 PDT 2011 - Analysis Code: MSC.Nastran 
+
+                                              Load Case: Lo_1, A1:Static Subcase 
+
+                                             Result Stress Tensor,  - Layer At Z1 
+
+                                                     Entity: Element Tensor
+
+
+-Entity ID--X Component---Y Component---XY Component-
+      5742      3.180619      0.177113     -0.656507
+     10005      0.714837     -0.755623     -2.247533
+    100056      8.586782      1.143661     -1.979852
+   1000256     -1.626627      0.292972     13.501270
+  25000567      0.387261      0.362679     -1.713554
+                       MSC.Patran 18.0.115609 Thu Aug 18 10:00:09 PDT 2011 - Analysis Code: MSC.Nastran 
+
+                                              Load Case: Lo_1, A1:Static Subcase 
+
+                                             Result Stress Tensor,  - Layer At Z2 
+
+                                                     Entity: Element Tensor
+
+
+-Entity ID--X Component---Y Component---XY Component-
+      5742      1.122031     -0.003585      0.617540
+     10005      0.735298     -0.688797     -2.237611
+    100056      8.596146      1.149986     -1.975886
+   1000256     -1.616266      0.293073     13.494287
+  25000567      0.408557      0.445764     -1.709946
+                       MSC.Patran 18.0.115609 Thu Aug 18 10:00:09 PDT 2011 - Analysis Code: MSC.Nastran 
+
+                                              Load Case: Lo_2, A1:Static Subcase 
+
+                                             Result Stress Tensor,  - Layer At Z1 
+
+                                                     Entity: Element Tensor
+
+
+-Entity ID--X Component---Y Component---XY Component-
+      5742      1.303174      0.270852      0.454300
+     10005     -0.241419     -0.252587     -0.050423
+    100056     -0.581890     -0.096387     -0.126232
+   1000256      0.856241      0.150323      0.203818
+  25000567     -0.238099     -0.417267     -0.213945
+                       MSC.Patran 18.0.115609 Thu Aug 18 10:00:09 PDT 2011 - Analysis Code: MSC.Nastran 
+
+                                              Load Case: Lo_2, A1:Static Subcase 
+
+                                             Result Stress Tensor,  - Layer At Z2 
+
+                                                     Entity: Element Tensor
+
+
+-Entity ID--X Component---Y Component---XY Component-
+      5742     -0.890464     -0.254245     -0.459402
+     10005     -0.003569      0.260794      0.131260
+    100056     -0.470029     -0.048696     -0.051411
+   1000256      1.099100      0.185672      0.172279
+  25000567      0.184275      0.774343      0.053219
+                       MSC.Patran 18.0.115609 Thu Aug 18 10:00:09 PDT 2011 - Analysis Code: MSC.Nastran 
+
+                                              Load Case: Lo_3, A1:Static Subcase 
+
+                                             Result Stress Tensor,  - Layer At Z1 
+
+                                                     Entity: Element Tensor
+
+
+-Entity ID--X Component---Y Component---XY Component-
+      5742      8.648236      0.480602     -0.727269
+     10005      0.492962      1.068715      0.464952
+    100056      0.260859      0.110347      0.202993
+   1000256      0.481989      0.072206     -0.112862
+  25000567      0.746549      1.930208      0.656521
+                       MSC.Patran 18.0.115609 Thu Aug 18 10:00:09 PDT 2011 - Analysis Code: MSC.Nastran 
+
+                                              Load Case: Lo_3, A1:Static Subcase 
+
+                                             Result Stress Tensor,  - Layer At Z2 
+
+                                                     Entity: Element Tensor
+
+
+-Entity ID--X Component---Y Component---XY Component-
+      5742      7.282952      0.452016     -0.849712
+     10005     -0.235101     -0.593674     -0.027555
+    100056     -0.087602     -0.045460      0.026415
+   1000256      0.078567      0.027053     -0.002420
+  25000567     -0.507492     -1.451411     -0.099401
+                       MSC.Patran 18.0.115609 Thu Aug 18 10:00:09 PDT 2011 - Analysis Code: MSC.Nastran 
+
+                                              Load Case: Lo_4, A1:Static Subcase 
+
+                                             Result Stress Tensor,  - Layer At Z1 
+
+                                                     Entity: Element Tensor
+
+
+-Entity ID--X Component---Y Component---XY Component-
+      5742      1.382234      0.139390     -0.388176
+     10005      0.555529      1.797919     -0.009899
+    100056      1.296072      0.380845     -0.568784
+   1000256     -3.862736     -0.837026      0.849400
+  25000567      0.459591      1.347110     -0.054817
+                       MSC.Patran 18.0.115609 Thu Aug 18 10:00:09 PDT 2011 - Analysis Code: MSC.Nastran 
+
+                                              Load Case: Lo_4, A1:Static Subcase 
+
+                                             Result Stress Tensor,  - Layer At Z2 
+
+                                                     Entity: Element Tensor
+
+
+-Entity ID--X Component---Y Component---XY Component-
+      5742      1.304871      0.135559     -0.385938
+     10005     -0.423202     -1.560072      0.237202
+    100056     -1.205893     -0.347022      0.690030
+   1000256      4.161447      0.889876     -0.910407
+  25000567     -0.336291     -1.120884      0.347177
+                       MSC.Patran 18.0.115609 Thu Aug 18 10:00:09 PDT 2011 - Analysis Code: MSC.Nastran 
+
+                                              Load Case: Lo_5, A1:Static Subcase 
+
+                                             Result Stress Tensor,  - Layer At Z1 
+
+                                                     Entity: Element Tensor
+
+
+-Entity ID--X Component---Y Component---XY Component-
+      5742      0.531942      0.092982     -0.336602
+     10005      0.059892      0.073747      0.127115
+    100056      0.465288      0.076764      0.002485
+   1000256      1.529737      0.045405     -0.337079
+  25000567      0.051553      0.052423      0.169785
+                       MSC.Patran 18.0.115609 Thu Aug 18 10:00:09 PDT 2011 - Analysis Code: MSC.Nastran 
+
+                                              Load Case: Lo_5, A1:Static Subcase 
+
+                                             Result Stress Tensor,  - Layer At Z2 
+
+                                                     Entity: Element Tensor
+
+
+-Entity ID--X Component---Y Component---XY Component-
+      5742      0.544213      0.093319     -0.336467
+     10005      0.089226      0.182042      0.128829
+    100056     -0.358871     -0.038107      0.135355
+   1000256     -1.198227      0.013440      0.267709
+  25000567      0.090029      0.181767      0.165169
+                       MSC.Patran 18.0.115609 Thu Aug 18 10:00:09 PDT 2011 - Analysis Code: MSC.Nastran 
+
+                                              Load Case: Lo_6, A1:Static Subcase 
+
+                                             Result Stress Tensor,  - Layer At Z1 
+
+                                                     Entity: Element Tensor
+
+
+-Entity ID--X Component---Y Component---XY Component-
+      5742    -10.076726     -0.403020      0.062980
+     10005      1.295837      4.785697      3.386667
+    100056     -0.347099      0.315550      2.256966
+   1000256      7.978352      1.413668     -1.986066
+  25000567      0.633904      2.446464      3.329607
+                       MSC.Patran 18.0.115609 Thu Aug 18 10:00:09 PDT 2011 - Analysis Code: MSC.Nastran 
+
+                                              Load Case: Lo_6, A1:Static Subcase 
+
+                                             Result Stress Tensor,  - Layer At Z2 
+
+                                                     Entity: Element Tensor
+
+
+-Entity ID--X Component---Y Component---XY Component-
+      5742    -10.075336     -0.402971      0.062972
+     10005      1.309984      4.829990      3.381988
+    100056     -0.365416      0.315917      2.248784
+   1000256      7.590777      1.384174     -1.901680
+  25000567      0.644888      2.479100      3.324393
+
+
+                                                      SUMMARY INFORMATION
+                                                  _________________________
+
+                                                         Min/Max Values
+    -Source ID--Entity ID---Sub ID----X Component--
+Min:       11       5742          0    -10.076726
+Max:        5       5742          0      8.648236
+    -Source ID--Entity ID---Sub ID----Y Component--
+Min:        8      10005          0     -1.560072
+Max:       12      10005          0      4.829990
+    -Source ID--Entity ID---Sub ID----XY Component-
+Min:        1      10005          0     -2.247533
+Max:        1    1000256          0     13.501270
+
+
+                                                         Result Sources
+-Source Id---Loadcase Name---------Subcase Name---------Layer Name----
+      1     Lo_1                  A1:Static Subcase    At Z1              
+      2     Lo_1                  A1:Static Subcase    At Z2              
+      3     Lo_2                  A1:Static Subcase    At Z1              
+      4     Lo_2                  A1:Static Subcase    At Z2              
+      5     Lo_3                  A1:Static Subcase    At Z1              
+      6     Lo_3                  A1:Static Subcase    At Z2              
+      7     Lo_4                  A1:Static Subcase    At Z1              
+      8     Lo_4                  A1:Static Subcase    At Z2              
+      9     Lo_5                  A1:Static Subcase    At Z1              
+     10     Lo_5                  A1:Static Subcase    At Z2              
+     11     Lo_6                  A1:Static Subcase    At Z1              
+     12     Lo_6                  A1:Static Subcase    At Z2              
+
+
+</value>
+  </data>
+  <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+  <data name="$this.Icon" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        AAABAAEAEBAAAAEAIABoBAAAFgAAACgAAAAQAAAAIAAAAAEAIAAAAAAAAAQAAMMOAADDDgAAAAAAAAAA
+        AADz4K//8+Cv//Pgr//z4K//8+Cv//Pgr//z4K//8+Cv/wAAAP8AAAD/8+Cv//Pgr//z4K//8+Cv//Pg
+        r//z4K//8+Cv//Pgr//z4K//8+Cv//Pgr//z4K//8+Cv//Pgr/8AAAD/AAAA//Pgr//z4K//8+Cv//Pg
+        r//z4K//8+Cv//Pgr//z4K//8+Cv//Pgr//z4K//8+Cv//Pgr//z4K//AAAA/wAAAP/z4K//AAAA//Pg
+        r//z4K//8+Cv//Pgr//z4K//8+Cv//Pgr//z4K//8+Cv//Pgr//z4K//8+Cv/wAAAP8AAAD/AAAA/wAA
+        AP/z4K//8+Cv//Pgr//z4K//AAAA//Pgr//z4K//8+Cv//Pgr//z4K//8+Cv//Pgr/8AAAD/AAAA//Pg
+        r/8AAAD/8+Cv//Pgr//z4K//8+Cv/wAAAP/z4K//8+Cv//Pgr//z4K//8+Cv//Pgr//z4K//AAAA/wAA
+        AP/z4K//8+Cv//Pgr//z4K//8+Cv//Pgr/8AAAD/AAAA//Pgr//z4K//8+Cv//Pgr//z4K//AAAA/wAA
+        AP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP/z4K//AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAA
+        AP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAA
+        AP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA//Pgr//z4K//8+Cv//Pg
+        r//z4K//AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP/z4K//AAAA//Pgr//z4K//8+Cv//Pg
+        r//z4K//8+Cv//Pgr/8AAAD/AAAA//Pgr//z4K//8+Cv//Pgr//z4K//8+Cv/wAAAP/z4K//8+Cv//Pg
+        r//z4K//8+Cv//Pgr//z4K//AAAA/wAAAP/z4K//AAAA//Pgr//z4K//8+Cv//Pgr//z4K//8+Cv//Pg
+        r//z4K//8+Cv//Pgr//z4K//8+Cv/wAAAP8AAAD/AAAA/wAAAP/z4K//8+Cv//Pgr//z4K//8+Cv//Pg
+        r//z4K//8+Cv//Pgr//z4K//8+Cv//Pgr/8AAAD/AAAA//Pgr/8AAAD/8+Cv//Pgr//z4K//8+Cv//Pg
+        r//z4K//8+Cv//Pgr//z4K//8+Cv//Pgr//z4K//AAAA/wAAAP/z4K//8+Cv//Pgr//z4K//8+Cv//Pg
+        r//z4K//8+Cv//Pgr//z4K//8+Cv//Pgr//z4K//8+Cv/wAAAP8AAAD/8+Cv//Pgr//z4K//8+Cv//Pg
+        r//z4K//AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+        AAAAAAAAAAAAAA==
+</value>
+  </data>
+</root>
