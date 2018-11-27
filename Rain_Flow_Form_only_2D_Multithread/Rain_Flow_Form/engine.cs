@@ -278,6 +278,7 @@ namespace Fatige_Stress_Counting_Tool
                 return;
             }
 
+            Main_Form.progressBar1.Maximum = Element_Count;
 
             Console.WriteLine("Patran Report File Read Successfully !!!");
             #endregion
@@ -426,6 +427,7 @@ namespace Fatige_Stress_Counting_Tool
 
 
                 Console.Title = "Completed Percent " + (100 * i / Element_Count) + "%";
+               
             }
 
             equivalent_stress_file.Close();

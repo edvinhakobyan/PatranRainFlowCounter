@@ -41,7 +41,9 @@ namespace Fatige_Stress_Counting_Tool
         Cyclogram_File_Format cyclogram_file_format = new Cyclogram_File_Format();
         Element_Property_Form elm_prop_elm = new Element_Property_Form();
 
-        
+
+
+
 
         private void Atach_1D_Report_File_Click(object sender, EventArgs e)
         {
@@ -313,18 +315,6 @@ namespace Fatige_Stress_Counting_Tool
                 Environment.Exit(0);
             }
         }
-
-
-        public void ProgressBarMax(int max)
-        {
-            progressBar1.Maximum = max;
-        }
-
-        public void Progress()
-        {
-            progressBar1.Increment(1);
-        }
-
 
     }
 }
