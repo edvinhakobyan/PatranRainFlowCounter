@@ -42,7 +42,7 @@ namespace Fatige_Stress_Counting_Tool
         Element_Property_Form elm_prop_elm = new Element_Property_Form();
 
 
-
+        
 
 
         private void Atach_1D_Report_File_Click(object sender, EventArgs e)

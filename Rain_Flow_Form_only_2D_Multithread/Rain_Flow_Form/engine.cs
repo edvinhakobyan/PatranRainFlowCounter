@@ -7,6 +7,7 @@ using System.Linq;
 using System.IO;
 using System;
 
+
 namespace Fatige_Stress_Counting_Tool
 {
     public class engine
@@ -245,7 +246,16 @@ namespace Fatige_Stress_Counting_Tool
         }
         public void Engine_for_2D()
         {
+            
 
+            Dispatcher.BeginInvoke(DispatcherPriority.Normal,
+                         (Action)(() =>
+                         {
+                             Main_Form.progressBar1.Increment(1);
+                             // ay sra mej end UI element@ vor poxes petqa vor ashxati
+                         }));
+
+            
 
             #region Reading Cyclograms File !!!
             Console.WriteLine("Reading Cyclograms File !!!");
@@ -705,7 +715,7 @@ namespace Fatige_Stress_Counting_Tool
             Console.Title = "Completed Percent " + 100 + "%";
             Console.WriteLine("\nEnd Solving.\nElapsed Time " + (DateTime.Now - time));
         }
-
+        
         
         static double[] Stress_in_alfa_plane_2D(double[,] b, double alfa)
         {

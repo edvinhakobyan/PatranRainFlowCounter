@@ -394,12 +394,10 @@ namespace Fatige_Stress_Counting_Tool
                         for (int j = first_id; j <= last_id; j += increment)
                             elem_id.Add(j);
 
-
                     if (first_id > last_id)
 
                         for (int j = first_id; j >= last_id; j += increment)
                             elem_id.Add(j);
-
                 }
                 char_count = 0;
             }

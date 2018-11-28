@@ -37,6 +37,7 @@
             this.groupBox8 = new System.Windows.Forms.GroupBox();
             this.label3 = new System.Windows.Forms.Label();
             this.Delta_angle = new System.Windows.Forms.TextBox();
+            this.progressBar1 = new System.Windows.Forms.ProgressBar();
             this.groupBox8.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -122,11 +123,19 @@
             this.Delta_angle.TabIndex = 6;
             this.Delta_angle.TextChanged += new System.EventHandler(this.Delta_angle_TextChanged);
             // 
+            // progressBar1
+            // 
+            this.progressBar1.Location = new System.Drawing.Point(12, 161);
+            this.progressBar1.Name = "progressBar1";
+            this.progressBar1.Size = new System.Drawing.Size(460, 11);
+            this.progressBar1.TabIndex = 14;
+            // 
             // Element_Property_Form
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(484, 262);
+            this.Controls.Add(this.progressBar1);
             this.Controls.Add(this.groupBox8);
             this.Controls.Add(this.Remuv_All_Tab);
             this.Controls.Add(this.Remuv_Tab);
@@ -158,7 +167,7 @@
         private System.Windows.Forms.GroupBox groupBox8;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.TextBox Delta_angle;
-
+        private System.Windows.Forms.ProgressBar progressBar1;
     }
 }
 
