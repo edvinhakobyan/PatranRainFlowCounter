@@ -54,7 +54,7 @@ namespace Fatige_Stress_Counting_Tool
 
             if (openfiledialog.ShowDialog() == DialogResult.OK)
             {
-                Engine.Report_File_Name_Pr = openfiledialog.FileName;
+                Engine.Report_File_Name = openfiledialog.FileName;
                 Stress_1D_2D_3D = "1_D";
 
                 Element_Property_Enabling(true, true, false, false, true, true);
@@ -70,9 +70,9 @@ namespace Fatige_Stress_Counting_Tool
 
             if (openfiledialog.ShowDialog() == DialogResult.OK)
             {
-                Engine.Report_File_Name_Pr = openfiledialog.FileName;
+                Engine.Report_File_Name = openfiledialog.FileName;
                 Stress_1D_2D_3D = "2_D";
-                Engine.Multiaxial_stress_Pr = "2D_1";
+                Engine.Multiaxial_stress = "2D_1";
 
                 Element_Property_Enabling(true, true, true, false, false, false);
             }
@@ -88,9 +88,9 @@ namespace Fatige_Stress_Counting_Tool
 
             if (openfiledialog.ShowDialog() == DialogResult.OK)
             {
-                Engine.Report_File_Name_Pr = openfiledialog.FileName;
+                Engine.Report_File_Name = openfiledialog.FileName;
                 Stress_1D_2D_3D = "3_D";
-                Engine.Multiaxial_stress_Pr = "3D_1";
+                Engine.Multiaxial_stress = "3D_1";
 
                 Element_Property_Enabling(true, true, false, false, true, true);
             }
@@ -107,7 +107,7 @@ namespace Fatige_Stress_Counting_Tool
             if (openfiledialog.ShowDialog() == DialogResult.OK)
             {
                 Cyclogramm_File_Name1 = openfiledialog.FileName;
-                Engine.Ciclogramm_File_Name_Pr = Cyclogramm_File_Name1;
+                Engine.Ciclogramm_File_Name = Cyclogramm_File_Name1;
             }
         }
 
@@ -125,13 +125,13 @@ namespace Fatige_Stress_Counting_Tool
                 string[] Templet_File_Name = savefiledialog.FileName.Split(sep);
                 for (int i = 0; i < Templet_File_Name.Length - 1; i++)
                 {
-                    Engine.Templet_File_Name_Pr += (Templet_File_Name[i] + "\\");
-                    Engine.Temporary_File_Name_Pr += (Templet_File_Name[i] + "\\");
+                    Engine.Templet_File_Name += (Templet_File_Name[i] + "\\");
+                    Engine.Temporary_File_Name += (Templet_File_Name[i] + "\\");
                 }
-                Engine.Templet_File_Name_Pr += "Stress_Templ.res_tmpl";
-                Engine.Temporary_File_Name_Pr += "Report_Temporary.txt";
+                Engine.Templet_File_Name += "Stress_Templ.res_tmpl";
+                Engine.Temporary_File_Name += "Report_Temporary.txt";
 
-                Engine.Result_File_Name_Pr = savefiledialog.FileName;
+                Engine.Result_File_Name = savefiledialog.FileName;
 
             }
 
@@ -140,22 +140,22 @@ namespace Fatige_Stress_Counting_Tool
         private void Run_Click(object sender, EventArgs e)
         {
 
-            Engine.Console_Show_Or_No_Pr = Show_Consol.Checked;
+            Engine.Console_Show_Or_No = Show_Consol.Checked;
 
-            if (!File.Exists(Engine.Report_File_Name_Pr))
+            if (!File.Exists(Engine.Report_File_Name))
             {
                 MessageBox.Show("Select Report File !                                                  ", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
 
-            if (!File.Exists(Engine.Ciclogramm_File_Name_Pr))
+            if (!File.Exists(Engine.Ciclogramm_File_Name))
             {
                 MessageBox.Show("Select File With Cyclograms !                                         ", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
-            if (Engine.Result_File_Name_Pr == null)
+            if (Engine.Result_File_Name == null)
             {
                 MessageBox.Show("Select Path for Results !" + new string(' ', 50), "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
@@ -170,14 +170,14 @@ namespace Fatige_Stress_Counting_Tool
 
 
 
-            if (Engine.Stress_equation_Pr == "walker")
+            if (Engine.Stress_equation == "walker")
             {
-                if (Engine.Coef_a_walker_Pr == 0)
+                if (Engine.Coef_a_walker == 0)
                 {
                     MessageBox.Show("Coefficient A in Walker equation is not correct !                 ", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     return;
                 }
-                if (Engine.Coef_gama_walker_Pr == 0)
+                if (Engine.Coef_gama_walker == 0)
                 {
                     MessageBox.Show("Coefficient Gamma in Walker equation is not correct !             ", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     return;
@@ -185,7 +185,7 @@ namespace Fatige_Stress_Counting_Tool
             }
 
 
-            if (Engine.Elm_prop_Pr.Count == 0)
+            if (Engine.Elm_prop.Count == 0)
             {
                 MessageBox.Show("Problem With Elements Properties !!!");
                 return;
@@ -222,7 +222,7 @@ namespace Fatige_Stress_Counting_Tool
             }
             else if (Stress_1D_2D_3D == "2_D")
             {
-                if (Engine.Multiaxial_stress_Pr == "2D_5")
+                if (Engine.Multiaxial_stress == "2D_5")
                 {
                     Thread d_2 = new Thread(new ThreadStart(engine_.Engine_for_2D_critical_plane));
                     d_2.Start();

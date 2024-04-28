@@ -279,10 +279,10 @@ namespace Fatige_Stress_Counting_Tool
 
         private void TextBox1_TextChanged(object sender, EventArgs e)
         {
-            List<int> a = null;
             TextBox tb = sender as TextBox;
             Label lb1 = tb.Parent.Controls[8] as Label;
             Label lb2 = tb.Parent.Controls[10] as Label;
+            List<int> a;
             if (tb.Text != "")
             {
                 try
@@ -417,17 +417,17 @@ namespace Fatige_Stress_Counting_Tool
                 }
                 else
                 {
-                    Engine.Delta_Pr = double.Parse(Delta_angle.Text);
+                    Engine.Delta = double.Parse(Delta_angle.Text);
                 }
             }
 
 
             //dic = dic.OrderBy(x => x.Key).ToDictionary(x => x.Key, x => x.Value);
 
-            Engine.Elm_prop_Pr = dic;
+            Engine.Elm_prop = dic;
 
             if(Delta_angle.Enabled)
-            Engine.Delta_Pr = double.Parse(Delta_angle.Text);
+            Engine.Delta = double.Parse(Delta_angle.Text);
 
             Close();
         }

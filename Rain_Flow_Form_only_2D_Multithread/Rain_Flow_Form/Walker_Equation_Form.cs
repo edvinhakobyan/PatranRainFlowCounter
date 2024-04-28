@@ -60,8 +60,8 @@ namespace Fatige_Stress_Counting_Tool
             }
             else
             {
-                Engine.Coef_a_walker_Pr = w_a;
-                Engine.Coef_gama_walker_Pr = w_g;
+                Engine.Coef_a_walker = w_a;
+                Engine.Coef_gama_walker = w_g;
             }
             Close();
         }

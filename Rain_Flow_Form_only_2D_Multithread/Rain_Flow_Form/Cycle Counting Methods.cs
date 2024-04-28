@@ -15,7 +15,7 @@ namespace Fatige_Stress_Counting_Tool
             if (checkBox1.Checked)
             {
                 checkBox2.Checked = false;
-                Engine.Cycle_method_Pr = "rain_flow";
+                Engine.Cycle_method = "rain_flow";
             }
             else
                 checkBox2.Checked = true;
@@ -26,7 +26,7 @@ namespace Fatige_Stress_Counting_Tool
             if (checkBox2.Checked)
             {
                 checkBox1.Checked = false;
-                Engine.Cycle_method_Pr = "full_cycle";
+                Engine.Cycle_method = "full_cycle";
             }
             else
                 checkBox1.Checked = true;

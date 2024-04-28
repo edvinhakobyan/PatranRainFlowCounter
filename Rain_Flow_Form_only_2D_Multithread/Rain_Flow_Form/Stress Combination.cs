@@ -33,31 +33,31 @@ namespace Fatige_Stress_Counting_Tool
 
         private void RadioButton1_CheckedChanged(object sender, EventArgs e)
         {
-            Engine.Multiaxial_stress_Pr = "2D_1";
+            Engine.Multiaxial_stress = "2D_1";
             Element_Property_Form.Delta_enable_Pr = false;
         }
 
         private void RadioButton2_CheckedChanged(object sender, EventArgs e)
         {
-            Engine.Multiaxial_stress_Pr = "2D_2";
+            Engine.Multiaxial_stress = "2D_2";
             Element_Property_Form.Delta_enable_Pr = false;
         }
 
         private void RadioButton3_CheckedChanged(object sender, EventArgs e)
         {
-            Engine.Multiaxial_stress_Pr = "2D_3";
+            Engine.Multiaxial_stress = "2D_3";
             Element_Property_Form.Delta_enable_Pr = false;
         }
 
         private void RadioButton4_CheckedChanged(object sender, EventArgs e)
         {
-            Engine.Multiaxial_stress_Pr = "2D_4";
+            Engine.Multiaxial_stress = "2D_4";
             Element_Property_Form.Delta_enable_Pr = false;
         }
 
         private void RadioButton5_CheckedChanged(object sender, EventArgs e)
         {
-            Engine.Multiaxial_stress_Pr = "2D_5";
+            Engine.Multiaxial_stress = "2D_5";
             Element_Property_Form.Delta_enable_Pr = true;
         }
 

@@ -16,23 +16,23 @@ namespace Fatige_Stress_Counting_Tool
         static double Cof_m;
         static double Sig_02;
         static double Ktg;
-        static readonly double Gudman_ult_stress = 1; //+
-        private static readonly char[] symbols = { ' ', '\t' };
+        static double Gudman_ult_stress = 1; //+
+        static char[] symbols = { ' ', '\t' };
 
 
-        public static string Report_File_Name_Pr { get; set; }
-        public static string Ciclogramm_File_Name_Pr { get; set; }
-        public static string Result_File_Name_Pr { get; set; }
-        public static string Templet_File_Name_Pr { get; set; }
-        public static string Temporary_File_Name_Pr { get; set; }
-        public static double Delta_Pr { get; set; }
-        public static double Coef_a_walker_Pr { get; set; }
-        public static double Coef_gama_walker_Pr { get; set; }
-        public static string Multiaxial_stress_Pr { get; set; }
-        public static string Stress_equation_Pr { get; set; }
-        public static string Cycle_method_Pr { get; set; } = "rain_flow";
-        public static bool Console_Show_Or_No_Pr { get; set; }
-        public static Dictionary<int, double[]> Elm_prop_Pr { get; set; } = new Dictionary<int, double[]>();
+        public static string Report_File_Name { get; set; }
+        public static string Ciclogramm_File_Name { get; set; }
+        public static string Result_File_Name { get; set; }
+        public static string Templet_File_Name { get; set; }
+        public static string Temporary_File_Name { get; set; }
+        public static double Delta { get; set; }
+        public static double Coef_a_walker { get; set; }
+        public static double Coef_gama_walker { get; set; }
+        public static string Multiaxial_stress { get; set; }
+        public static string Stress_equation { get; set; }
+        public static string Cycle_method { get; set; } = "rain_flow";
+        public static bool Console_Show_Or_No { get; set; }
+        public static Dictionary<int, double[]> Elm_prop { get; set; } = new Dictionary<int, double[]>();
 
 
         public void Engine_for_1D()
@@ -84,7 +84,7 @@ namespace Fatige_Stress_Counting_Tool
             #region Element_Property_Check
             Console.WriteLine("Property check started !!!");
 
-            BinaryReader element_id_from_report = new BinaryReader(File.OpenRead(Temporary_File_Name_Pr));
+            BinaryReader element_id_from_report = new BinaryReader(File.OpenRead(Temporary_File_Name));
             List<int> error_list = new List<int>();
 
             int id;
@@ -94,7 +94,7 @@ namespace Fatige_Stress_Counting_Tool
                 element_id_from_report.BaseStream.Position = i;
                 id = (int)element_id_from_report.ReadInt64();
 
-                if (!Elm_prop_Pr.ContainsKey(id))
+                if (!Elm_prop.ContainsKey(id))
                     error_list.Add(id);
             }
             element_id_from_report.Close();
@@ -102,7 +102,7 @@ namespace Fatige_Stress_Counting_Tool
 
             if (error_list.Count != 0)
             {
-                string path = Temporary_File_Name_Pr.Substring(0, Temporary_File_Name_Pr.IndexOf(".txt")) + "_Error_List.txt";
+                string path = Temporary_File_Name.Substring(0, Temporary_File_Name.IndexOf(".txt")) + "_Error_List.txt";
                 StreamWriter Error_List_Stream = new StreamWriter(path);
 
                 foreach (int elmid in error_list)
@@ -120,11 +120,11 @@ namespace Fatige_Stress_Counting_Tool
 
             MessageBox.Show(string.Format("Number Of Point In Ciclograms = {0}\nNumber Of Load Cases = {1}\nNumber Of Elements = {2}", Cycle_Line_count, Load_Case_Count, Element_Count));
 
-            BinaryReader read = new BinaryReader(File.Open(Temporary_File_Name_Pr, FileMode.Open));
+            BinaryReader read = new BinaryReader(File.Open(Temporary_File_Name, FileMode.Open));
 
-            StreamWriter equivalent_stress_file = new StreamWriter(Result_File_Name_Pr);
+            StreamWriter equivalent_stress_file = new StreamWriter(Result_File_Name);
 
-            Create_templit_1D(Templet_File_Name_Pr);
+            Create_templit_1D(Templet_File_Name);
 
             equivalent_stress_file.WriteLine("Fatigue Stress:" + Environment.NewLine + "1" + Environment.NewLine +
                                                   "SUBTITLE 1" + Environment.NewLine + "SUBTITLE 2");
@@ -138,7 +138,7 @@ namespace Fatige_Stress_Counting_Tool
                 read.BaseStream.Position = i * 16;
 
                 int Element_id = (int)read.ReadInt64();
-                Cof_m = Elm_prop_Pr[Element_id][0];
+                Cof_m = Elm_prop[Element_id][0];
 
                 for (int j = 0; j < Load_Case_Count; j++)
                 {
@@ -148,7 +148,7 @@ namespace Fatige_Stress_Counting_Tool
 
 
                 double Sigma_equiv;
-                switch (Cycle_method_Pr)
+                switch (Cycle_method)
                 {
                     case "rain_flow": Sigma_equiv = Rain_flow_method(Oneaxial_stress_cycle(cycl_matrix, stress_x_direction), Cof_m); break;
                     case "full_cycle": Sigma_equiv = Full_cycle_method(Oneaxial_stress_cycle(cycl_matrix, stress_x_direction), Cof_m); break;
@@ -160,7 +160,7 @@ namespace Fatige_Stress_Counting_Tool
 
                 equivalent_stress_file.WriteLine(outtext);
 
-                if (Console_Show_Or_No_Pr)
+                if (Console_Show_Or_No)
                     Console.WriteLine(outtext);
 
                 Console.Title = "Completed " + (100 * i / Element_Count) + "%";
@@ -170,7 +170,7 @@ namespace Fatige_Stress_Counting_Tool
 
             equivalent_stress_file.Close();
             read.Close();
-            File.Delete(Temporary_File_Name_Pr);
+            File.Delete(Temporary_File_Name);
             Console.Title = "Completed " + 100 + "%";
             Console.WriteLine("\nEnd Solving.\nElapsed Time " + (DateTime.Now - time));
         }
@@ -223,7 +223,7 @@ namespace Fatige_Stress_Counting_Tool
             #region Element_Property_Check
             Console.WriteLine("Property check started !!!");
 
-            BinaryReader element_id_from_report = new BinaryReader(File.OpenRead(Temporary_File_Name_Pr));
+            BinaryReader element_id_from_report = new BinaryReader(File.OpenRead(Temporary_File_Name));
             List<int> error_list = new List<int>();
 
             int id;
@@ -232,7 +232,7 @@ namespace Fatige_Stress_Counting_Tool
                 element_id_from_report.BaseStream.Position = i;
                 id = (int)element_id_from_report.ReadInt64();
 
-                if (!Elm_prop_Pr.ContainsKey(id))
+                if (!Elm_prop.ContainsKey(id))
                     error_list.Add(id);
             }
             element_id_from_report.Close();
@@ -240,7 +240,7 @@ namespace Fatige_Stress_Counting_Tool
 
             if (error_list.Count != 0)
             {
-                string path = Temporary_File_Name_Pr.Substring(0, Temporary_File_Name_Pr.IndexOf(".txt")) + "_Error_List.txt";
+                string path = Temporary_File_Name.Substring(0, Temporary_File_Name.IndexOf(".txt")) + "_Error_List.txt";
                 StreamWriter Error_List_Stream = new StreamWriter(path);
 
                 foreach (int elmid in error_list)
@@ -257,12 +257,12 @@ namespace Fatige_Stress_Counting_Tool
 
             MessageBox.Show(string.Format("Number Of Point In Ciclograms = {0}\nNumber Of Load Cases = {1}\nNumber Of Elements = {2}", Cycle_Line_count, Load_Case_Count, Element_Count));
 
-            BinaryReader read = new BinaryReader(File.Open(Temporary_File_Name_Pr, FileMode.Open));
+            BinaryReader read = new BinaryReader(File.Open(Temporary_File_Name, FileMode.Open));
 
-            StreamWriter equivalent_stress_file = new StreamWriter(Result_File_Name_Pr);
+            StreamWriter equivalent_stress_file = new StreamWriter(Result_File_Name);
 
 
-            Create_templit_2D(Templet_File_Name_Pr);
+            Create_templit_2D(Templet_File_Name);
 
             equivalent_stress_file.WriteLine("Fatigue Stress:" + Environment.NewLine + "4" + Environment.NewLine +
                                                   "SUBTITLE 1" + Environment.NewLine + "SUBTITLE 2");
@@ -281,10 +281,10 @@ namespace Fatige_Stress_Counting_Tool
 
                 int Element_id = (int)read.ReadInt64();
 
-                Cof_m = Elm_prop_Pr[Element_id][0];
-                Cof_k = Elm_prop_Pr[Element_id][1];
-                Sig_02 = Elm_prop_Pr[Element_id][2];
-                Ktg = Elm_prop_Pr[Element_id][3];
+                Cof_m = Elm_prop[Element_id][0];
+                Cof_k = Elm_prop[Element_id][1];
+                Sig_02 = Elm_prop[Element_id][2];
+                Ktg = Elm_prop[Element_id][3];
 
                 for (int j = 0; j < Load_Case_Count; j++)
                 {
@@ -312,7 +312,7 @@ namespace Fatige_Stress_Counting_Tool
                 }
 
 
-                switch (Cycle_method_Pr)
+                switch (Cycle_method)
                 {
                     case "rain_flow":
                         {
@@ -338,7 +338,7 @@ namespace Fatige_Stress_Counting_Tool
                 equivalent_stress_file.WriteLine(outtext);
 
 
-                if (Console_Show_Or_No_Pr)
+                if (Console_Show_Or_No)
                     Console.WriteLine(outtext);
 
 
@@ -348,21 +348,21 @@ namespace Fatige_Stress_Counting_Tool
 
             equivalent_stress_file.Close();
             read.Close();
-            File.Delete(Temporary_File_Name_Pr);
+            File.Delete(Temporary_File_Name);
             Console.Title = "Completed " + 100 + "%";
             Console.WriteLine("\nEnd Solving.\nElapsed Time " + (DateTime.Now - time));
         }
         public void Engine_for_2D_critical_plane()
         {
 
-            if (Delta_Pr < 0.001)
+            if (Delta < 0.001)
             {
                 MessageBox.Show("Minimum Angular Iteration Must Be Greater or Equal 0.001 Degree !", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
             else
             {
-                Delta_Pr *= Math.PI / 180;
+                Delta *= Math.PI / 180;
             }
 
             #region Reading Cyclograms File !!!
@@ -411,7 +411,7 @@ namespace Fatige_Stress_Counting_Tool
             #region Element_Property_Check
             Console.WriteLine("Property check started !!!");
 
-            BinaryReader element_id_from_report = new BinaryReader(File.OpenRead(Temporary_File_Name_Pr));
+            BinaryReader element_id_from_report = new BinaryReader(File.OpenRead(Temporary_File_Name));
             List<int> error_list = new List<int>();
 
             int id;
@@ -421,7 +421,7 @@ namespace Fatige_Stress_Counting_Tool
                 element_id_from_report.BaseStream.Position = i;
                 id = (int)element_id_from_report.ReadInt64();
 
-                if (!Elm_prop_Pr.ContainsKey(id))
+                if (!Elm_prop.ContainsKey(id))
                     error_list.Add(id);
             }
             element_id_from_report.Close();
@@ -429,7 +429,7 @@ namespace Fatige_Stress_Counting_Tool
 
             if (error_list.Count != 0)
             {
-                string path = Temporary_File_Name_Pr.Substring(0, Temporary_File_Name_Pr.IndexOf(".txt")) + "_Error_List.txt";
+                string path = Temporary_File_Name.Substring(0, Temporary_File_Name.IndexOf(".txt")) + "_Error_List.txt";
                 StreamWriter Error_List_Stream = new StreamWriter(path);
 
                 foreach (int elmid in error_list)
@@ -448,11 +448,11 @@ namespace Fatige_Stress_Counting_Tool
             MessageBox.Show(string.Format("The Number Of Point In Ciclograms = {0}\nThe Number Of Load Cases = {1}\nThe Number Of Elements = {2}", Cycle_Line_count, Load_Case_Count, Element_Count));
 
 
-            BinaryReader read = new BinaryReader(File.Open(Temporary_File_Name_Pr, FileMode.Open));
+            BinaryReader read = new BinaryReader(File.Open(Temporary_File_Name, FileMode.Open));
 
-            StreamWriter equivalent_stress_file = new StreamWriter(Result_File_Name_Pr);
+            StreamWriter equivalent_stress_file = new StreamWriter(Result_File_Name);
 
-            Create_templit_2D_critical(Templet_File_Name_Pr);
+            Create_templit_2D_critical(Templet_File_Name);
 
             equivalent_stress_file.WriteLine("Fatigue Stress:" + Environment.NewLine + "12" + Environment.NewLine +
                                                   "SUBTITLE 1" + Environment.NewLine + "SUBTITLE 2");
@@ -488,10 +488,10 @@ namespace Fatige_Stress_Counting_Tool
 
                 Element_id = (int)read.ReadInt64();
 
-                Cof_m = Elm_prop_Pr[Element_id][0];
-                Cof_k = Elm_prop_Pr[Element_id][1];
-                Sig_02 = Elm_prop_Pr[Element_id][2];
-                Ktg = Elm_prop_Pr[Element_id][3];
+                Cof_m = Elm_prop[Element_id][0];
+                Cof_k = Elm_prop[Element_id][1];
+                Sig_02 = Elm_prop[Element_id][2];
+                Ktg = Elm_prop[Element_id][3];
 
                 for (int j = 0; j < Load_Case_Count; j++)
                 {
@@ -527,7 +527,7 @@ namespace Fatige_Stress_Counting_Tool
                 double[] max_eqv_alfa = new double[3]; //syun1 = z1, z0, z2; syun2 = z1_alfa, z0_alf, z2_alfa
 
 
-                for (double alfa = 0; alfa <= Math.PI; alfa += Delta_Pr)
+                for (double alfa = 0; alfa <= Math.PI; alfa += Delta)
                 {
                     stres_z0_alfa_plane = Stress_in_alfa_plane_2D(z0_stress, alfa);
                     stres_z1_alfa_plane = Stress_in_alfa_plane_2D(z1_stress, alfa);
@@ -541,7 +541,7 @@ namespace Fatige_Stress_Counting_Tool
                     Sigma_equiv_z1 = 0;
                     Sigma_equiv_z2 = 0;
 
-                    switch (Cycle_method_Pr)
+                    switch (Cycle_method)
                     {
                         case "rain_flow":
                             {
@@ -604,7 +604,7 @@ namespace Fatige_Stress_Counting_Tool
                 equivalent_stress_file.WriteLine(outtext);
 
 
-                if (Console_Show_Or_No_Pr)
+                if (Console_Show_Or_No)
                     Console.WriteLine(outtext);
 
                 Console.Title = "Completed " + (100 * i / Element_Count) + "%";
@@ -619,7 +619,7 @@ namespace Fatige_Stress_Counting_Tool
 
             equivalent_stress_file.Close();
             read.Close();
-            File.Delete(Temporary_File_Name_Pr);
+            File.Delete(Temporary_File_Name);
             Console.Title = "Completed " + 100 + "%";
             Console.WriteLine("\nEnd Solving.\nElapsed Time " + (DateTime.Now - time));
         }
@@ -681,7 +681,7 @@ namespace Fatige_Stress_Counting_Tool
                     }
                 }
 
-                switch (Multiaxial_stress_Pr)
+                switch (Multiaxial_stress)
                 {
                     case "2D_1": stresses_cycle[i] = Sign_equivalent_von_mises_stress_2D(stress_component[0], stress_component[1], stress_component[2]); break;
                     case "2D_2": stresses_cycle[i] = Sign_maximum_shear_stress_2D(stress_component[0], stress_component[1], stress_component[2]); break;
@@ -976,11 +976,11 @@ namespace Fatige_Stress_Counting_Tool
             foreach (var cyc in x_cyc)
             {
                 double Sigma_equiv_i = 0;
-                switch (Stress_equation_Pr)
+                switch (Stress_equation)
                 {
                     case "cai": Sigma_equiv_i = Cai_Equation(cyc[0], cyc[1]); break;
                     case "cai_new": Sigma_equiv_i = Cai_New_Equation(cyc[0], cyc[1], Sig_02, Ktg); break;
-                    case "walker": Sigma_equiv_i = Walker_Equation(cyc[0], cyc[1], Coef_a_walker_Pr, Coef_gama_walker_Pr); break;
+                    case "walker": Sigma_equiv_i = Walker_Equation(cyc[0], cyc[1], Coef_a_walker, Coef_gama_walker); break;
                     case "goodman": Sigma_equiv_i = Goodman_Equation(cyc[0], cyc[1], Gudman_ult_stress); break;
                     case "soderberg": Sigma_equiv_i = Soderberg_Equation(cyc[0], cyc[1]); break;
                     case "morro": Sigma_equiv_i = Morro_Equation(cyc[0], cyc[1]); break;
@@ -1139,7 +1139,7 @@ namespace Fatige_Stress_Counting_Tool
         static double[,] Read_cyclograms(ref int Cycle_Line_count, ref int Cycle_Column_count)
         {
 
-            string[] Line_Cicl = File.ReadAllLines(Ciclogramm_File_Name_Pr); // stringvi masiv en haytararum eu fayli sax toger@ darcnum arandzin andamner                      
+            string[] Line_Cicl = File.ReadAllLines(Ciclogramm_File_Name); // stringvi masiv en haytararum eu fayli sax toger@ darcnum arandzin andamner                      
 
             Cycle_Line_count = Line_Cicl.Length;
             Cycle_Column_count = Line_Cicl[0].Split(symbols, StringSplitOptions.RemoveEmptyEntries).Length;
@@ -1171,8 +1171,8 @@ namespace Fatige_Stress_Counting_Tool
             long elm_id = 0;
 
 
-            StreamReader Report_R = File.OpenText(Report_File_Name_Pr);
-            BinaryWriter Report_W = new BinaryWriter(File.Create(Temporary_File_Name_Pr));
+            StreamReader Report_R = File.OpenText(Report_File_Name);
+            BinaryWriter Report_W = new BinaryWriter(File.Create(Temporary_File_Name));
 
             while ((Report_line = Report_R.ReadLine()) != null)
             {
@@ -1184,7 +1184,7 @@ namespace Fatige_Stress_Counting_Tool
             }
             Report_R.Close();
 
-            Report_R = File.OpenText(Report_File_Name_Pr);
+            Report_R = File.OpenText(Report_File_Name);
 
 
             while ((Report_line = Report_R.ReadLine()) != null)
