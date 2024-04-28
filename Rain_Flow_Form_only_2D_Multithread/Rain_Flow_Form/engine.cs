@@ -26,7 +26,7 @@ namespace Fatige_Stress_Counting_Tool
         public static string Result_File_Name { get; set; }
         public static double Coef_gama_walker { get; set; }
         public static string Templet_File_Name { get; set; }
-        public static bool Console_Show_Or_No { get; set; }
+        public static bool ConsoleShow { get; set; }
         public static string Ciclogramm_File_Name { get; set; }
         public static string Temporary_File_Name { get; set; }
         public static MeanStressCorrectionEnum Stress_equation { get; set; }
@@ -35,8 +35,9 @@ namespace Fatige_Stress_Counting_Tool
         public static Dictionary<int, double[]> Elm_prop { get; set; } = new Dictionary<int, double[]>();
 
 
-        public void Engine_for_1D()
+        public void Engine_for_1D(object pBar)
         {
+            var progressBar = pBar as ProgressBar;
 
             #region Reading Cyclograms File !!!
             Console.WriteLine("Reading Cyclograms File !!!");
@@ -150,8 +151,8 @@ namespace Fatige_Stress_Counting_Tool
                 double Sigma_equiv;
                 switch (Cycle_method)
                 {
-                    case Enums.CycleCountingAlgoritm.RainFlow: Sigma_equiv = Rain_flow_method(Oneaxial_stress_cycle(cycl_matrix, stress_x_direction), Cof_m); break;
-                    case Enums.CycleCountingAlgoritm.FullCycle: Sigma_equiv = Full_cycle_method(Oneaxial_stress_cycle(cycl_matrix, stress_x_direction), Cof_m); break;
+                    case CycleCountingAlgoritm.RainFlow: Sigma_equiv = Rain_flow_method(Oneaxial_stress_cycle(cycl_matrix, stress_x_direction), Cof_m); break;
+                    case CycleCountingAlgoritm.FullCycle: Sigma_equiv = Full_cycle_method(Oneaxial_stress_cycle(cycl_matrix, stress_x_direction), Cof_m); break;
                     default: MessageBox.Show("Select Cycle Counting Method"); return;
                 }
 
@@ -160,10 +161,18 @@ namespace Fatige_Stress_Counting_Tool
 
                 equivalent_stress_file.WriteLine(outtext);
 
-                if (Console_Show_Or_No)
+                if (ConsoleShow)
                     Console.WriteLine(outtext);
 
-                Console.Title = "Completed " + (100 * i / Element_Count) + "%";
+                if (i % (Element_Count / 100) == 0 || i == Element_Count - 1)
+                {
+                    var percent = (int)(100 * (1.0 * i / (Element_Count - 1)));
+                    Console.Title = $"Completed {percent}%";
+                    progressBar.Invoke(new Action(() =>
+                    {
+                        progressBar.Value = percent;
+                    }));
+                }
 
             }
 
@@ -171,11 +180,11 @@ namespace Fatige_Stress_Counting_Tool
             equivalent_stress_file.Close();
             read.Close();
             File.Delete(Temporary_File_Name);
-            Console.Title = "Completed " + 100 + "%";
             Console.WriteLine("\nEnd Solving.\nElapsed Time " + (DateTime.Now - time));
         }
-        public void Engine_for_2D()
+        public void Engine_for_2D(object pBar)
         {
+            var progressBar = pBar as ProgressBar;
 
             #region Reading Cyclograms File !!!
             Console.WriteLine("Reading Cyclograms File !!!");
@@ -332,25 +341,34 @@ namespace Fatige_Stress_Counting_Tool
                     default: MessageBox.Show("Select Cycle Counting Method"); return;
                 }
 
-                string outtext = Element_id + Environment.NewLine + Exponent_String_Format(Sigma_equiv_z1, Sigma_equiv_z0, Sigma_equiv_z2, Max_Valu(Sigma_equiv_z1, Sigma_equiv_z0, Sigma_equiv_z2));
+                string outtext = Element_id + Environment.NewLine + Exponent_String_Format(Sigma_equiv_z1, Sigma_equiv_z0, Sigma_equiv_z2,
+                    Max_Value(Sigma_equiv_z1, Sigma_equiv_z0, Sigma_equiv_z2));
                 equivalent_stress_file.WriteLine(outtext);
 
 
-                if (Console_Show_Or_No)
+                if (ConsoleShow)
                     Console.WriteLine(outtext);
 
 
-                Console.Title = "Completed " + (100 * i / Element_Count) + "%";
+                if (i % (Element_Count / 100) == 0 || i == Element_Count - 1)
+                {
+                    var percent = (int)(100 * (1.0 * i / (Element_Count - 1)));
+                    Console.Title = $"Completed {percent}%";
+                    progressBar.Invoke(new Action(() =>
+                    {
+                        progressBar.Value = percent;
+                    }));
+                }
             }
 
             equivalent_stress_file.Close();
             read.Close();
             File.Delete(Temporary_File_Name);
-            Console.Title = "Completed " + 100 + "%";
             Console.WriteLine("\nEnd Solving.\nElapsed Time " + (DateTime.Now - time));
         }
-        public void Engine_for_2D_critical_plane()
+        public void Engine_for_2D_critical_plane(object pBar)
         {
+            var progressBar = pBar as ProgressBar;
 
             if (Delta < 0.001)
             {
@@ -580,23 +598,24 @@ namespace Fatige_Stress_Counting_Tool
                 equivalent_stress_file.WriteLine(outtext);
 
 
-                if (Console_Show_Or_No)
+                if (ConsoleShow)
                     Console.WriteLine(outtext);
 
-                Console.Title = "Completed " + (100 * i / Element_Count) + "%";
-
-                //if (i == 1000)
-                //{
-                //    Console.WriteLine("\nEnd Solving.\nElapsed Time " + (DateTime.Now - time));
-                //    Console.ReadKey();
-                //}
+                if (i % (Element_Count / 100) == 0 || i == Element_Count - 1)
+                {
+                    var percent = (int)(100 * (1.0 * i / (Element_Count - 1)));
+                    Console.Title = $"Completed {percent}%";
+                    progressBar.Invoke(new Action(() =>
+                    {
+                        progressBar.Value = percent;
+                    }));
+                }
             }
 
 
             equivalent_stress_file.Close();
             read.Close();
             File.Delete(Temporary_File_Name);
-            Console.Title = "Completed " + 100 + "%";
             Console.WriteLine("\nEnd Solving.\nElapsed Time " + (DateTime.Now - time));
         }
 
@@ -607,14 +626,6 @@ namespace Fatige_Stress_Counting_Tool
 
             int a_rows = a.GetLength(0);
             int a_cols = a.GetLength(1);
-
-            //for (int i = 0; i < a_rows; i++)
-            //{
-            //    for (int j = 0; j < a_cols; j++)
-            //    {
-            //        principal_stresses[i] += a[i, j] * b[j];
-            //    }
-            //}
 
             Parallel.For(0, a_rows, i =>
             {
@@ -629,6 +640,7 @@ namespace Fatige_Stress_Counting_Tool
         static double[] Stress_in_alfa_plane_2D(double[,] b, double alfa)
         {
             int b_rows = b.GetLength(0);
+
             double[] stress_in_alfa_plane = new double[b_rows];
 
             for (int i = 0; i < b_rows; i++)
@@ -647,7 +659,7 @@ namespace Fatige_Stress_Counting_Tool
 
             Parallel.For(0, a_rows, i =>
             {
-                double[] stress_component = new double[b_cols];
+                double[] stress_component = new double[b_cols]; //b_cols - stress component count
 
                 for (int j = 0; j < b_cols; j++)
                 {
@@ -659,13 +671,22 @@ namespace Fatige_Stress_Counting_Tool
 
                 switch (Multiaxial_stress)
                 {
-                    case StressCalculationTypeEnum.SignVonMises2D: stresses_cycle[i] = Sign_equivalent_von_mises_stress_2D(stress_component[0], stress_component[1], stress_component[2]); break;
-                    case StressCalculationTypeEnum.SignMaximumShearStress2D: stresses_cycle[i] = Sign_maximum_shear_stress_2D(stress_component[0], stress_component[1], stress_component[2]); break;
-                    case StressCalculationTypeEnum.MaxPrincipal2D: stresses_cycle[i] = Max_principal(stress_component[0], stress_component[1], stress_component[2]); break;
-                    case StressCalculationTypeEnum.EquivalentVonMisesStress2D: stresses_cycle[i] = Equivalent_von_mises_stress(stress_component[0], stress_component[1], stress_component[2]); break;
+                    case StressCalculationTypeEnum.SignVonMises2D:
+                        stresses_cycle[i] = Sign_equivalent_von_mises_stress_2D(stress_component[0], stress_component[1], stress_component[2]);
+                        break;
+                    case StressCalculationTypeEnum.SignMaximumShearStress2D:
+                        stresses_cycle[i] = Sign_maximum_shear_stress_2D(stress_component[0], stress_component[1], stress_component[2]);
+                        break;
+                    case StressCalculationTypeEnum.MaxPrincipal2D:
+                        stresses_cycle[i] = Max_principal(stress_component[0], stress_component[1], stress_component[2]);
+                        break;
+                    case StressCalculationTypeEnum.EquivalentVonMisesStress2D:
+                        stresses_cycle[i] = Equivalent_von_mises_stress(stress_component[0], stress_component[1], stress_component[2]);
+                        break;
                     default: MessageBox.Show("Select one of 2D methods"); break;
                 }
             });
+
             return stresses_cycle;
         }
 
@@ -954,16 +975,16 @@ namespace Fatige_Stress_Counting_Tool
                 double Sigma_equiv_i = 0;
                 switch (Stress_equation)
                 {
-                    case MeanStressCorrectionEnum.Cai : Sigma_equiv_i = Cai_Equation(cyc[0], cyc[1]); break;
-                    case MeanStressCorrectionEnum.CaiNew : Sigma_equiv_i = Cai_New_Equation(cyc[0], cyc[1], Sig_02, Ktg); break;
+                    case MeanStressCorrectionEnum.Cai: Sigma_equiv_i = Cai_Equation(cyc[0], cyc[1]); break;
+                    case MeanStressCorrectionEnum.CaiNew: Sigma_equiv_i = Cai_New_Equation(cyc[0], cyc[1], Sig_02, Ktg); break;
                     case MeanStressCorrectionEnum.Walker: Sigma_equiv_i = Walker_Equation(cyc[0], cyc[1], Coef_a_walker, Coef_gama_walker); break;
                     case MeanStressCorrectionEnum.Goodman: Sigma_equiv_i = Goodman_Equation(cyc[0], cyc[1], Gudman_ult_stress); break;
                     case MeanStressCorrectionEnum.Soderberg: Sigma_equiv_i = Soderberg_Equation(cyc[0], cyc[1]); break;
                     case MeanStressCorrectionEnum.Morro: Sigma_equiv_i = Morro_Equation(cyc[0], cyc[1]); break;
-                    case MeanStressCorrectionEnum.Gerber : Sigma_equiv_i = Gerber_Equation(cyc[0], cyc[1]); break;
-                    case MeanStressCorrectionEnum.Asme : Sigma_equiv_i = ASME_Elliptic_Equation(cyc[0], cyc[1]); break;
-                    case MeanStressCorrectionEnum.Swt : Sigma_equiv_i = Smith_Watson_Topper_Equation(cyc[0], cyc[1]); break;
-                    case MeanStressCorrectionEnum.Stulen : Sigma_equiv_i = Stulen_Equation(cyc[0], cyc[1]); break;
+                    case MeanStressCorrectionEnum.Gerber: Sigma_equiv_i = Gerber_Equation(cyc[0], cyc[1]); break;
+                    case MeanStressCorrectionEnum.Asme: Sigma_equiv_i = ASME_Elliptic_Equation(cyc[0], cyc[1]); break;
+                    case MeanStressCorrectionEnum.Swt: Sigma_equiv_i = Smith_Watson_Topper_Equation(cyc[0], cyc[1]); break;
+                    case MeanStressCorrectionEnum.Stulen: Sigma_equiv_i = Stulen_Equation(cyc[0], cyc[1]); break;
                     case MeanStressCorrectionEnum.Topper: Sigma_equiv_i = Topper_Sandor_Equation(cyc[0], cyc[1]); break;
                     default: MessageBox.Show("Stress Equation not selected"); return 0;
                 }
@@ -1085,7 +1106,7 @@ namespace Fatige_Stress_Counting_Tool
         }
 
 
-        static double Max_Valu(params double[] a)
+        static double Max_Value(params double[] a)
         {
             return a.Max();
         }

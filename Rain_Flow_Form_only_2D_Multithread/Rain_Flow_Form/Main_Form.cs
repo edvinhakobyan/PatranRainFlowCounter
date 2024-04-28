@@ -141,7 +141,7 @@ namespace Fatige_Stress_Counting_Tool
         private void Run_Click(object sender, EventArgs e)
         {
 
-            Engine.Console_Show_Or_No = Show_Consol.Checked;
+            Engine.ConsoleShow = Show_Consol.Checked;
 
             if (!File.Exists(Engine.Report_File_Name))
             {
@@ -218,20 +218,20 @@ namespace Fatige_Stress_Counting_Tool
 
             if (StressType == StressTypeEnum.OneDimensional)
             {
-                Thread d_1 = new Thread(new ThreadStart(engine_.Engine_for_1D));
-                d_1.Start();
+                Thread d_1 = new Thread(new ParameterizedThreadStart(engine_.Engine_for_1D));
+                d_1.Start(progressBar);
             }
             else if (StressType == StressTypeEnum.TwoDimensional)
             {
                 if (Engine.Multiaxial_stress == StressCalculationTypeEnum.CriticalPlane)
                 {
-                    Thread d_2 = new Thread(new ThreadStart(engine_.Engine_for_2D_critical_plane));
-                    d_2.Start();
+                    Thread d_2 = new Thread(new ParameterizedThreadStart(engine_.Engine_for_2D_critical_plane));
+                    d_2.Start(progressBar);
                 }
                 else
                 {
-                    Thread d_2 = new Thread(new ThreadStart(engine_.Engine_for_2D));
-                    d_2.Start();
+                    Thread d_2 = new Thread(new ParameterizedThreadStart(engine_.Engine_for_2D));
+                    d_2.Start(progressBar);
                 }
             }
         }

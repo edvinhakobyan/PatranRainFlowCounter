@@ -52,7 +52,7 @@
             this.Volumetric = new System.Windows.Forms.ToolStripMenuItem();
             this.Cycl_File_Format = new System.Windows.Forms.ToolStripMenuItem();
             this.Run = new System.Windows.Forms.Button();
-            this.progressBar1 = new System.Windows.Forms.ProgressBar();
+            this.progressBar = new System.Windows.Forms.ProgressBar();
             this.menu.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -246,12 +246,12 @@
             this.Run.UseVisualStyleBackColor = true;
             this.Run.Click += new System.EventHandler(this.Run_Click);
             // 
-            // progressBar1
+            // progressBar
             // 
-            this.progressBar1.Location = new System.Drawing.Point(5, 578);
-            this.progressBar1.Name = "progressBar1";
-            this.progressBar1.Size = new System.Drawing.Size(413, 10);
-            this.progressBar1.TabIndex = 2;
+            this.progressBar.Location = new System.Drawing.Point(5, 578);
+            this.progressBar.Name = "progressBar";
+            this.progressBar.Size = new System.Drawing.Size(413, 10);
+            this.progressBar.TabIndex = 2;
             // 
             // Main_Form
             // 
@@ -261,7 +261,7 @@
             this.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("$this.BackgroundImage")));
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
             this.ClientSize = new System.Drawing.Size(425, 597);
-            this.Controls.Add(this.progressBar1);
+            this.Controls.Add(this.progressBar);
             this.Controls.Add(this.Run);
             this.Controls.Add(this.menu);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
@@ -305,7 +305,7 @@
         private System.Windows.Forms.ToolStripMenuItem Save_Result_As;
         private System.Windows.Forms.ToolStripMenuItem Element_Property;
         private System.Windows.Forms.ToolStripMenuItem Cycl_File_Format;
-        public System.Windows.Forms.ProgressBar progressBar1;
+        public System.Windows.Forms.ProgressBar progressBar;
     }
 }
 
