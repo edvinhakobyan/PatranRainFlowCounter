@@ -1,7 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Windows.Forms;
-
+using System.Collections.Generic;
 namespace Fatige_Stress_Counting_Tool
 {
     static class Program

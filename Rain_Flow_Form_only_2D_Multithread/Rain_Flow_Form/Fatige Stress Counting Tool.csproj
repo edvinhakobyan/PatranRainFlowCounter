@@ -86,12 +86,15 @@
     <Compile Include="Element_Property_Form.Designer.cs">
       <DependentUpon>Element_Property_Form.cs</DependentUpon>
     </Compile>
+    <Compile Include="Enums\CycleCountingAlgoritm.cs" />
+    <Compile Include="Enums\StressTypeEnum.cs" />
     <Compile Include="Goodman_Equation_Form.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Goodman_Equation_Form.Designer.cs">
       <DependentUpon>Goodman_Equation_Form.cs</DependentUpon>
     </Compile>
+    <Compile Include="Enums\MeanStressCorrectionEnum.cs" />
     <Compile Include="Main_Form.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -136,6 +139,7 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Enums\StressCalculationTypeEnum.cs" />
     <Compile Include="Walker_Equation_Form.cs">
       <SubType>Form</SubType>
     </Compile>

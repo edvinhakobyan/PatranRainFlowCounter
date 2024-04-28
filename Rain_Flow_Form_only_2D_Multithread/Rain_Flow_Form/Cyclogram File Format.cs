@@ -1,5 +1,4 @@
-﻿using System;
-using System.Windows.Forms;
+﻿using System.Windows.Forms;
 
 namespace Fatige_Stress_Counting_Tool
 {
@@ -9,6 +8,5 @@ namespace Fatige_Stress_Counting_Tool
         {
             InitializeComponent();
         }
-
     }
 }

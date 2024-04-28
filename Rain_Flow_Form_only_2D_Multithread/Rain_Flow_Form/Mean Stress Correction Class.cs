@@ -1,11 +1,12 @@
-﻿using System;
+﻿using Fatige_Stress_Counting_Tool.Enums;
+using System;
 using System.Windows.Forms;
 
 namespace Fatige_Stress_Counting_Tool
 {
     public partial class Mean_Stress_Correction_Class : Form
     {
-        public static bool choosing_equation_Pr { get; set; } = false;
+        public static bool Choosing_equation_Pr { get; set; } = false;
 
 
         public Mean_Stress_Correction_Class()
@@ -15,9 +16,9 @@ namespace Fatige_Stress_Counting_Tool
         
         
         Cai_equation_Form cai_equation_form = new Cai_equation_Form();
-        private void radioButton1_CheckedChanged(object sender, EventArgs e)
+        private void RadioButton1_CheckedChanged(object sender, EventArgs e)
         {
-            Engine.Stress_equation = "cai";
+            Engine.Stress_equation = MeanStressCorrectionEnum.Cai;
 
             if (radioButton1.Checked)
             {
@@ -30,9 +31,9 @@ namespace Fatige_Stress_Counting_Tool
         }
 
         Walker_Equation_Form walker_equation_form = new Walker_Equation_Form();
-        private void radioButton2_CheckedChanged(object sender, EventArgs e)
+        private void RadioButton2_CheckedChanged(object sender, EventArgs e)
         {
-            Engine.Stress_equation = "walker";
+            Engine.Stress_equation = MeanStressCorrectionEnum.Walker;
             if (radioButton2.Checked)
             {
                 walker_equation_form = new Walker_Equation_Form();
@@ -43,9 +44,9 @@ namespace Fatige_Stress_Counting_Tool
         }
 
         Goodman_Equation_Form goodman_equation_form = new Goodman_Equation_Form();
-        private void radioButton3_CheckedChanged(object sender, EventArgs e)
+        private void RadioButton3_CheckedChanged(object sender, EventArgs e)
         {
-            Engine.Stress_equation = "goodman";
+            Engine.Stress_equation = MeanStressCorrectionEnum.Goodman;
             if (radioButton3.Checked)
             {
                 goodman_equation_form = new Goodman_Equation_Form();
@@ -53,57 +54,48 @@ namespace Fatige_Stress_Counting_Tool
             }
             else
                 goodman_equation_form.Close();
-
-
         }
 
-        private void radioButton4_CheckedChanged(object sender, EventArgs e)
+        private void RadioButton4_CheckedChanged(object sender, EventArgs e)
         {
-            Engine.Stress_equation = "soderberg";
-
+            Engine.Stress_equation = MeanStressCorrectionEnum.Soderberg;
         }
                     
 
-        private void radioButton5_CheckedChanged(object sender, EventArgs e)
+        private void RadioButton5_CheckedChanged(object sender, EventArgs e)
         {
-            Engine.Stress_equation = "morro";
-
+            Engine.Stress_equation = MeanStressCorrectionEnum.Morro;
         }
 
-        private void radioButton6_CheckedChanged(object sender, EventArgs e)
+        private void RadioButton6_CheckedChanged(object sender, EventArgs e)
         {
-            Engine.Stress_equation = "gerber";
-
+            Engine.Stress_equation = MeanStressCorrectionEnum.Gerber;
         }
 
-        private void radioButton7_CheckedChanged(object sender, EventArgs e)
+        private void RadioButton7_CheckedChanged(object sender, EventArgs e)
         {
-            Engine.Stress_equation = "asme";
-
+            Engine.Stress_equation = MeanStressCorrectionEnum.Asme;
         }
 
-        private void radioButton8_CheckedChanged(object sender, EventArgs e)
+        private void RadioButton8_CheckedChanged(object sender, EventArgs e)
         {
-            Engine.Stress_equation = "swt";
-
+            Engine.Stress_equation = MeanStressCorrectionEnum.Swt;
         }
 
-        private void radioButton9_CheckedChanged(object sender, EventArgs e)
+        private void RadioButton9_CheckedChanged(object sender, EventArgs e)
         {
-            Engine.Stress_equation = "stulen";
-
+            Engine.Stress_equation = MeanStressCorrectionEnum.Stulen;
         }
 
         private void radioButton10_CheckedChanged(object sender, EventArgs e)
         {
-            Engine.Stress_equation = "topper";
-
+            Engine.Stress_equation = MeanStressCorrectionEnum.Topper;
         }
 
         Cai_New_equation_Form cai_new_equation_form = new Cai_New_equation_Form();
-        private void radioButton11_CheckedChanged(object sender, EventArgs e)
+        private void RadioButton11_CheckedChanged(object sender, EventArgs e)
         {
-            Engine.Stress_equation = "cai_new";
+            Engine.Stress_equation = MeanStressCorrectionEnum.CaiNew;
 
             if (radioButton11.Checked)
             {
@@ -118,16 +110,15 @@ namespace Fatige_Stress_Counting_Tool
 
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void Button1_Click(object sender, EventArgs e)
         {
             if (radioButton1.Checked || radioButton2.Checked || radioButton3.Checked || 
                 radioButton4.Checked || radioButton5.Checked || radioButton6.Checked || 
                 radioButton7.Checked || radioButton8.Checked || radioButton9.Checked ||
                 radioButton10.Checked || radioButton11.Checked)
-                choosing_equation_Pr = true;
+                Choosing_equation_Pr = true;
 
             Close();
         }
-
     }
 }

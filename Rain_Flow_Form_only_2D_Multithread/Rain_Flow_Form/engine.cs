@@ -6,7 +6,7 @@ using System.Text;
 using System.Linq;
 using System.IO;
 using System;
-
+using Fatige_Stress_Counting_Tool.Enums;
 
 namespace Fatige_Stress_Counting_Tool
 {
@@ -20,18 +20,18 @@ namespace Fatige_Stress_Counting_Tool
         static char[] symbols = { ' ', '\t' };
 
 
-        public static string Report_File_Name { get; set; }
-        public static string Ciclogramm_File_Name { get; set; }
-        public static string Result_File_Name { get; set; }
-        public static string Templet_File_Name { get; set; }
-        public static string Temporary_File_Name { get; set; }
         public static double Delta { get; set; }
         public static double Coef_a_walker { get; set; }
+        public static string Report_File_Name { get; set; }
+        public static string Result_File_Name { get; set; }
         public static double Coef_gama_walker { get; set; }
-        public static string Multiaxial_stress { get; set; }
-        public static string Stress_equation { get; set; }
-        public static string Cycle_method { get; set; } = "rain_flow";
+        public static string Templet_File_Name { get; set; }
         public static bool Console_Show_Or_No { get; set; }
+        public static string Ciclogramm_File_Name { get; set; }
+        public static string Temporary_File_Name { get; set; }
+        public static MeanStressCorrectionEnum Stress_equation { get; set; }
+        public static StressCalculationTypeEnum Multiaxial_stress { get; set; }
+        public static CycleCountingAlgoritm Cycle_method { get; set; } = CycleCountingAlgoritm.RainFlow;
         public static Dictionary<int, double[]> Elm_prop { get; set; } = new Dictionary<int, double[]>();
 
 
@@ -150,8 +150,8 @@ namespace Fatige_Stress_Counting_Tool
                 double Sigma_equiv;
                 switch (Cycle_method)
                 {
-                    case "rain_flow": Sigma_equiv = Rain_flow_method(Oneaxial_stress_cycle(cycl_matrix, stress_x_direction), Cof_m); break;
-                    case "full_cycle": Sigma_equiv = Full_cycle_method(Oneaxial_stress_cycle(cycl_matrix, stress_x_direction), Cof_m); break;
+                    case Enums.CycleCountingAlgoritm.RainFlow: Sigma_equiv = Rain_flow_method(Oneaxial_stress_cycle(cycl_matrix, stress_x_direction), Cof_m); break;
+                    case Enums.CycleCountingAlgoritm.FullCycle: Sigma_equiv = Full_cycle_method(Oneaxial_stress_cycle(cycl_matrix, stress_x_direction), Cof_m); break;
                     default: MessageBox.Show("Select Cycle Counting Method"); return;
                 }
 
@@ -314,16 +314,14 @@ namespace Fatige_Stress_Counting_Tool
 
                 switch (Cycle_method)
                 {
-                    case "rain_flow":
+                    case CycleCountingAlgoritm.RainFlow:
                         {
                             Sigma_equiv_z1 = Rain_flow_method(Multiaxial_stress_cycle_2D(cycl_matrix, z1_stress), Cof_m);
                             Sigma_equiv_z0 = Rain_flow_method(Multiaxial_stress_cycle_2D(cycl_matrix, z0_stress), Cof_m);
                             Sigma_equiv_z2 = Rain_flow_method(Multiaxial_stress_cycle_2D(cycl_matrix, z2_stress), Cof_m);
                         }
                         break;
-
-
-                    case "full_cycle":
+                    case CycleCountingAlgoritm.FullCycle:
                         {
                             Sigma_equiv_z1 = Full_cycle_method(Multiaxial_stress_cycle_2D(cycl_matrix, z1_stress), Cof_m);
                             Sigma_equiv_z0 = Full_cycle_method(Multiaxial_stress_cycle_2D(cycl_matrix, z0_stress), Cof_m);
@@ -343,7 +341,6 @@ namespace Fatige_Stress_Counting_Tool
 
 
                 Console.Title = "Completed " + (100 * i / Element_Count) + "%";
-
             }
 
             equivalent_stress_file.Close();
@@ -459,14 +456,7 @@ namespace Fatige_Stress_Counting_Tool
 
             Console.WriteLine("Start Solving....");
 
-            string outtext = "";
-
             var time = DateTime.Now;
-
-
-            int Element_id = 0;
-            double temp1 = 0.0;
-            double temp2 = 0.0;
             double[,] z0_stress = new double[Load_Case_Count, 3];
             double[,] z1_stress = new double[Load_Case_Count, 3];
             double[,] z2_stress = new double[Load_Case_Count, 3];
@@ -486,7 +476,7 @@ namespace Fatige_Stress_Counting_Tool
             {
                 read.BaseStream.Position = i * 32;
 
-                Element_id = (int)read.ReadInt64();
+                int Element_id = (int)read.ReadInt64();
 
                 Cof_m = Elm_prop[Element_id][0];
                 Cof_k = Elm_prop[Element_id][1];
@@ -498,10 +488,10 @@ namespace Fatige_Stress_Counting_Tool
                     for (int k = 1; k < 4; k++) //0-n elementi hamarn a, 0-X,1-Y,2-XY
                     {
                         read.BaseStream.Position = (2 * j * Element_Count + i) * 32 + k * 8; // (+8*k) araji long@ic heto ekox@
-                        temp1 = read.ReadDouble();
+                        double temp1 = read.ReadDouble();
 
                         read.BaseStream.Position = (2 * j * Element_Count + i + Element_Count) * 32 + k * 8;
-                        temp2 = read.ReadDouble();
+                        double temp2 = read.ReadDouble();
 
                         z0_stress[j, k - 1] = (temp1 + temp2) / 2;
 
@@ -518,11 +508,6 @@ namespace Fatige_Stress_Counting_Tool
                     }
                 }
 
-
-                Sigma_equiv_z0 = 0;
-                Sigma_equiv_z1 = 0;
-                Sigma_equiv_z2 = 0;
-
                 double[] max_eqv = new double[3];      //syun1 = z1, z0, z2; syun2 = z1_alfa, z0_alf, z2_alfa
                 double[] max_eqv_alfa = new double[3]; //syun1 = z1, z0, z2; syun2 = z1_alfa, z0_alf, z2_alfa
 
@@ -537,20 +522,16 @@ namespace Fatige_Stress_Counting_Tool
                     stres_z1_plane_cycle = Oneaxial_stress_cycle(cycl_matrix, stres_z1_alfa_plane);
                     stres_z2_plane_cycle = Oneaxial_stress_cycle(cycl_matrix, stres_z2_alfa_plane);
 
-                    Sigma_equiv_z0 = 0;
-                    Sigma_equiv_z1 = 0;
-                    Sigma_equiv_z2 = 0;
-
                     switch (Cycle_method)
                     {
-                        case "rain_flow":
+                        case CycleCountingAlgoritm.RainFlow:
                             {
                                 Sigma_equiv_z1 = Rain_flow_method(stres_z1_plane_cycle, Cof_m);
                                 Sigma_equiv_z0 = Rain_flow_method(stres_z0_plane_cycle, Cof_m);
                                 Sigma_equiv_z2 = Rain_flow_method(stres_z2_plane_cycle, Cof_m);
                             }
                             break;
-                        case "full_cycle":
+                        case CycleCountingAlgoritm.FullCycle:
                             {
                                 Sigma_equiv_z1 = Rain_flow_method(stres_z1_plane_cycle, Cof_m);
                                 Sigma_equiv_z0 = Rain_flow_method(stres_z0_plane_cycle, Cof_m);
@@ -576,10 +557,6 @@ namespace Fatige_Stress_Counting_Tool
                         max_eqv[2] = Sigma_equiv_z2;
                         max_eqv_alfa[2] = alfa;
                     }
-
-                    Array.Clear(stres_z0_plane_cycle, 0, stres_z0_plane_cycle.Length);
-                    Array.Clear(stres_z1_plane_cycle, 0, stres_z1_plane_cycle.Length);
-                    Array.Clear(stres_z2_plane_cycle, 0, stres_z2_plane_cycle.Length);
                 }
 
                 double z1x = max_eqv[0] * Math.Cos(max_eqv_alfa[0]);
@@ -599,8 +576,7 @@ namespace Fatige_Stress_Counting_Tool
                 double zmax_y = Max_Of_Layers * Math.Sin(Max_Of_Layers_Alfa);
 
 
-                outtext = Element_id + Environment.NewLine + Exponent_String_Format(z1x, z1y, 0.0, z0x, z0y, 0.0, z2x, z2y, 0.0, zmax_x, zmax_y, 0.0);
-
+                string outtext = Element_id + Environment.NewLine + Exponent_String_Format(z1x, z1y, 0.0, z0x, z0y, 0.0, z2x, z2y, 0.0, zmax_x, zmax_y, 0.0);
                 equivalent_stress_file.WriteLine(outtext);
 
 
@@ -625,17 +601,6 @@ namespace Fatige_Stress_Counting_Tool
         }
 
 
-        static double[] Stress_in_alfa_plane_2D(double[,] b, double alfa)
-        {
-            int b_rows = b.GetLength(0);
-            double[] stress_in_alfa_plane = new double[b_rows];
-
-            for (int i = 0; i < b_rows; i++)
-            {
-                stress_in_alfa_plane[i] = Sigma_alfa_2D(b[i, 0], b[i, 1], b[i, 2], alfa);
-            }
-            return stress_in_alfa_plane;
-        }
         static double[] Oneaxial_stress_cycle(double[,] a, double[] b)
         {
             double[] principal_stresses = new double[a.GetLength(0)];
@@ -661,6 +626,17 @@ namespace Fatige_Stress_Counting_Tool
 
             return principal_stresses;
         }
+        static double[] Stress_in_alfa_plane_2D(double[,] b, double alfa)
+        {
+            int b_rows = b.GetLength(0);
+            double[] stress_in_alfa_plane = new double[b_rows];
+
+            for (int i = 0; i < b_rows; i++)
+            {
+                stress_in_alfa_plane[i] = Sigma_alfa_2D(b[i, 0], b[i, 1], b[i, 2], alfa);
+            }
+            return stress_in_alfa_plane;
+        }
         static double[] Multiaxial_stress_cycle_2D(double[,] a, double[,] b)
         {
             double[] stresses_cycle = new double[a.GetLength(0)];
@@ -683,10 +659,10 @@ namespace Fatige_Stress_Counting_Tool
 
                 switch (Multiaxial_stress)
                 {
-                    case "2D_1": stresses_cycle[i] = Sign_equivalent_von_mises_stress_2D(stress_component[0], stress_component[1], stress_component[2]); break;
-                    case "2D_2": stresses_cycle[i] = Sign_maximum_shear_stress_2D(stress_component[0], stress_component[1], stress_component[2]); break;
-                    case "2D_3": stresses_cycle[i] = Max_principal(stress_component[0], stress_component[1], stress_component[2]); break;
-                    case "2D_4": stresses_cycle[i] = Equivalent_von_mises_stress(stress_component[0], stress_component[1], stress_component[2]); break;
+                    case StressCalculationTypeEnum.SignVonMises2D: stresses_cycle[i] = Sign_equivalent_von_mises_stress_2D(stress_component[0], stress_component[1], stress_component[2]); break;
+                    case StressCalculationTypeEnum.SignMaximumShearStress2D: stresses_cycle[i] = Sign_maximum_shear_stress_2D(stress_component[0], stress_component[1], stress_component[2]); break;
+                    case StressCalculationTypeEnum.MaxPrincipal2D: stresses_cycle[i] = Max_principal(stress_component[0], stress_component[1], stress_component[2]); break;
+                    case StressCalculationTypeEnum.EquivalentVonMisesStress2D: stresses_cycle[i] = Equivalent_von_mises_stress(stress_component[0], stress_component[1], stress_component[2]); break;
                     default: MessageBox.Show("Select one of 2D methods"); break;
                 }
             });
@@ -694,22 +670,6 @@ namespace Fatige_Stress_Counting_Tool
         }
 
 
-        static double Rain_flow_method(double[] x, double kof_m)
-        {
-            var result = CalculateRainFlow(x);
-
-            var equiv = CalculateEquvalentStress(result, kof_m);
-
-            return equiv;
-        }
-        static double Full_cycle_method(double[] x, double kof_m)
-        {
-            var result = CalculateFullCycle(x);
-
-            var equiv = CalculateEquvalentStress(result, kof_m);
-
-            return equiv;
-        }
         static List<double[]> CalculateRainFlow(double[] rgn)
         {
             int k0 = rgn.Length;
@@ -969,6 +929,22 @@ namespace Fatige_Stress_Counting_Tool
 
             return x_cyc;
         }
+        static double Rain_flow_method(double[] x, double kof_m)
+        {
+            var result = CalculateRainFlow(x);
+
+            var equiv = CalculateEquvalentStress(result, kof_m);
+
+            return equiv;
+        }
+        static double Full_cycle_method(double[] x, double kof_m)
+        {
+            var result = CalculateFullCycle(x);
+
+            var equiv = CalculateEquvalentStress(result, kof_m);
+
+            return equiv;
+        }
         static double CalculateEquvalentStress(List<double[]> x_cyc, double kof_m)
         {
             // Calculate equivalent stress for each cycle
@@ -978,17 +954,17 @@ namespace Fatige_Stress_Counting_Tool
                 double Sigma_equiv_i = 0;
                 switch (Stress_equation)
                 {
-                    case "cai": Sigma_equiv_i = Cai_Equation(cyc[0], cyc[1]); break;
-                    case "cai_new": Sigma_equiv_i = Cai_New_Equation(cyc[0], cyc[1], Sig_02, Ktg); break;
-                    case "walker": Sigma_equiv_i = Walker_Equation(cyc[0], cyc[1], Coef_a_walker, Coef_gama_walker); break;
-                    case "goodman": Sigma_equiv_i = Goodman_Equation(cyc[0], cyc[1], Gudman_ult_stress); break;
-                    case "soderberg": Sigma_equiv_i = Soderberg_Equation(cyc[0], cyc[1]); break;
-                    case "morro": Sigma_equiv_i = Morro_Equation(cyc[0], cyc[1]); break;
-                    case "gerber": Sigma_equiv_i = Gerber_Equation(cyc[0], cyc[1]); break;
-                    case "asme": Sigma_equiv_i = ASME_Elliptic_Equation(cyc[0], cyc[1]); break;
-                    case "swt": Sigma_equiv_i = Smith_Watson_Topper_Equation(cyc[0], cyc[1]); break;
-                    case "stulen": Sigma_equiv_i = Stulen_Equation(cyc[0], cyc[1]); break;
-                    case "topper": Sigma_equiv_i = Topper_Sandor_Equation(cyc[0], cyc[1]); break;
+                    case MeanStressCorrectionEnum.Cai : Sigma_equiv_i = Cai_Equation(cyc[0], cyc[1]); break;
+                    case MeanStressCorrectionEnum.CaiNew : Sigma_equiv_i = Cai_New_Equation(cyc[0], cyc[1], Sig_02, Ktg); break;
+                    case MeanStressCorrectionEnum.Walker: Sigma_equiv_i = Walker_Equation(cyc[0], cyc[1], Coef_a_walker, Coef_gama_walker); break;
+                    case MeanStressCorrectionEnum.Goodman: Sigma_equiv_i = Goodman_Equation(cyc[0], cyc[1], Gudman_ult_stress); break;
+                    case MeanStressCorrectionEnum.Soderberg: Sigma_equiv_i = Soderberg_Equation(cyc[0], cyc[1]); break;
+                    case MeanStressCorrectionEnum.Morro: Sigma_equiv_i = Morro_Equation(cyc[0], cyc[1]); break;
+                    case MeanStressCorrectionEnum.Gerber : Sigma_equiv_i = Gerber_Equation(cyc[0], cyc[1]); break;
+                    case MeanStressCorrectionEnum.Asme : Sigma_equiv_i = ASME_Elliptic_Equation(cyc[0], cyc[1]); break;
+                    case MeanStressCorrectionEnum.Swt : Sigma_equiv_i = Smith_Watson_Topper_Equation(cyc[0], cyc[1]); break;
+                    case MeanStressCorrectionEnum.Stulen : Sigma_equiv_i = Stulen_Equation(cyc[0], cyc[1]); break;
+                    case MeanStressCorrectionEnum.Topper: Sigma_equiv_i = Topper_Sandor_Equation(cyc[0], cyc[1]); break;
                     default: MessageBox.Show("Stress Equation not selected"); return 0;
                 }
 
@@ -999,7 +975,6 @@ namespace Fatige_Stress_Counting_Tool
 
             return Sigma_equiv;
         }
-
 
 
         static double Cai_Equation(double min, double max)
@@ -1019,6 +994,66 @@ namespace Fatige_Stress_Counting_Tool
             {
                 return 0;
             }
+        }
+        static double Morro_Equation(double min, double max)
+        {
+            return 0;
+        }
+        static double Gerber_Equation(double min, double max)
+        {
+            return 0;
+        }
+        static double Stulen_Equation(double min, double max)
+        {
+            return 0;
+        }
+        static double Soderberg_Equation(double min, double max)
+        {
+            return 0;
+        }
+        static double Topper_Sandor_Equation(double min, double max)
+        {
+            return 0;
+        }
+        static double ASME_Elliptic_Equation(double min, double max)
+        {
+            return 0;
+        }
+        static double Smith_Watson_Topper_Equation(double min, double max)
+        {
+            return 0;
+        }
+        static double Goodman_Equation(double min, double max, double ult_stress)
+        {
+            double Sig_a = (max - min) / 2;
+            double Sig_m = (max + min) / 2;
+
+            if (Sig_m <= -(ult_stress))
+            {
+                return 0;
+            }
+            else if (Sig_m > -(ult_stress) && Sig_m <= 0)
+            {
+                return Sig_a;
+            }
+            else if (Sig_m > 0 && Sig_m < ult_stress)
+            {
+                return Sig_a / (1 - Sig_m / ult_stress);
+            }
+            else
+            {
+                return -1;
+            }
+        }
+        static double Walker_Equation(double min, double max, double A, double gama)
+        {
+            double Sig_a = (max - min) / 2;
+            double Sig_m = (max + min) / 2;
+
+            if (max <= 0)
+                return 0;
+            else
+                return A * Math.Pow(max, (1 - gama)) * Math.Pow(Sig_a, gama);
         }
         static double Cai_New_Equation(double min, double max, double sig02, double Ktg)
         {
@@ -1048,72 +1083,8 @@ namespace Fatige_Stress_Counting_Tool
 
             throw new Exception($"Save this message: min={min} max={max} sig02={sig02} Ktg={Ktg}");
         }
-        static double Walker_Equation(double min, double max, double A, double gama)
-        {
-            double Sig_a = (max - min) / 2;
-            double Sig_m = (max + min) / 2;
-
-            if (max <= 0)
-                return 0;
-            else
-                return A * Math.Pow(max, (1 - gama)) * Math.Pow(Sig_a, gama);
-        }
-        static double Goodman_Equation(double min, double max, double ult_stress)
-        {
-            double Sig_a = (max - min) / 2;
-            double Sig_m = (max + min) / 2;
-
-            if (Sig_m <= -(ult_stress))
-            {
-                return 0;
-            }
-            else if (Sig_m > -(ult_stress) && Sig_m <= 0)
-            {
-                return Sig_a;
-            }
-            else if (Sig_m > 0 && Sig_m < ult_stress)
-            {
-                return Sig_a / (1 - Sig_m / ult_stress);
-            }
-            else
-            {
-                return -1;
-            }
-        }
-        static double Soderberg_Equation(double min, double max)
-        {
-            return 0;
-        }
-        static double Morro_Equation(double min, double max)
-        {
-            return 0;
-        }
-        static double Gerber_Equation(double min, double max)
-        {
-            return 0;
-        }
-        static double ASME_Elliptic_Equation(double min, double max)
-        {
-            return 0;
-        }
-        static double Smith_Watson_Topper_Equation(double min, double max)
-        {
-            return 0;
-        }
-        static double Stulen_Equation(double min, double max)
-        {
-            return 0;
-        }
-        static double Topper_Sandor_Equation(double min, double max)
-        {
-            return 0;
-        }
 
 
-        static double Sigma_alfa_2D(double x, double y, double xy, double alfa)
-        {
-            return 0.5 * (x + y) + 0.5 * (x - y) * Math.Cos(2.0 * alfa) + xy * Math.Sin(2.0 * alfa);
-        }
         static double Max_Valu(params double[] a)
         {
             return a.Max();
@@ -1133,6 +1104,10 @@ namespace Fatige_Stress_Counting_Tool
 
             }
             return return_str.ToString();
+        }
+        static double Sigma_alfa_2D(double x, double y, double xy, double alfa)
+        {
+            return 0.5 * (x + y) + 0.5 * (x - y) * Math.Cos(2.0 * alfa) + xy * Math.Sin(2.0 * alfa);
         }
 
 
@@ -1162,18 +1137,33 @@ namespace Fatige_Stress_Counting_Tool
             }
             return cycl_matrix;
         }
+        static bool If_numeric_string(string a, int colum_count, ref long elm_id, ref double[] componens)
+        {
+            string[] mas = a.Split(new char[] { ' ', '\t' }, StringSplitOptions.RemoveEmptyEntries);
 
+            if (mas.Length < colum_count)
+                return false;
+
+            if (!long.TryParse(mas[0], out elm_id))
+                return false;
+
+
+            for (int i = 1; i < colum_count; i++)
+            {
+                if (!double.TryParse(mas[i], NumberStyles.Any, CultureInfo.InvariantCulture, out componens[i - 1]))
+                    return false;
+            }
+            return true;
+        }
         static bool Create_Temporary_Result_File(ref int Load_Case_Count, ref int Element_Count, ref int tox_byate_lengt, int count)
         {
+            var ecomponents = new double[count - 1];
+            var elm_id = 0L;
 
-            string Report_line = "";
-            double[] ecomponents = new double[count - 1];
-            long elm_id = 0;
+            var Report_R = File.OpenText(Report_File_Name);
+            var Report_W = new BinaryWriter(File.Create(Temporary_File_Name));
 
-
-            StreamReader Report_R = File.OpenText(Report_File_Name);
-            BinaryWriter Report_W = new BinaryWriter(File.Create(Temporary_File_Name));
-
+            string Report_line;
             while ((Report_line = Report_R.ReadLine()) != null)
             {
                 if (If_numeric_string(Report_line, count, ref elm_id, ref ecomponents))
@@ -1189,7 +1179,6 @@ namespace Fatige_Stress_Counting_Tool
 
             while ((Report_line = Report_R.ReadLine()) != null)
             {
-
                 if (If_numeric_string(Report_line, count, ref elm_id, ref ecomponents))
                 {
                     if (Report_line.Length != tox_byate_lengt)
@@ -1208,7 +1197,6 @@ namespace Fatige_Stress_Counting_Tool
 
                 if (Report_line.Contains("Load Case:"))
                     Load_Case_Count++;
-
             }
 
             if (Load_Case_Count == 0 || Element_Count % Load_Case_Count != 0)
@@ -1217,7 +1205,7 @@ namespace Fatige_Stress_Counting_Tool
                 return false;
             }
 
-            Element_Count = Element_Count / Load_Case_Count;
+            Element_Count /= Load_Case_Count;
 
             if (count == 4)
             {
@@ -1234,25 +1222,6 @@ namespace Fatige_Stress_Counting_Tool
 
             Report_R.Close();
             Report_W.Close();
-            return true;
-        }
-
-        static bool If_numeric_string(string a, int colum_count, ref long elm_id, ref double[] componens)
-        {
-            string[] mas = a.Split(new char[] { ' ', '\t' }, StringSplitOptions.RemoveEmptyEntries);
-
-            if (mas.Length < colum_count)
-                return false;
-
-            if (!long.TryParse(mas[0], out elm_id))
-                return false;
-
-
-            for (int i = 1; i < colum_count; i++)
-            {
-                if (!double.TryParse(mas[i], NumberStyles.Any, CultureInfo.InvariantCulture, out componens[i - 1]))
-                    return false;
-            }
             return true;
         }
 
@@ -1352,15 +1321,21 @@ namespace Fatige_Stress_Counting_Tool
 
 
         //for 2D
-        static double Sign_equivalent_von_mises_stress_2D(double x, double y, double xy)
+        static double Min_principal(double x, double y, double xy)
         {
-            double Max = Max_principal(x, y, xy);
-            double Min = Min_principal(x, y, xy);
-
-            if (Math.Abs(Max) > Math.Abs(Min))
-                return Math.Sign(Max) * Math.Sqrt(2 * (Max * Max + Min * Min - Max * Min));
-            else
-                return Math.Sign(Min) * Math.Sqrt(2 * (Max * Max + Min * Min - Max * Min));
+            double sum = (x + y) / 2;
+            double sub = (x - y) / 2;
+            return sum - Math.Pow(((sub * sub) + xy * xy), 0.5);
+        }
+        static double Max_principal(double x, double y, double xy)
+        {
+            double sum = (x + y) / 2;
+            double sub = (x - y) / 2;
+            return sum + Math.Pow(((sub * sub) + xy * xy), 0.5);
+        }
+        static double Equivalent_von_mises_stress(double x, double y, double xy)
+        {
+            return Math.Sqrt(x * x + y * y + 3 * xy * xy - x * y);
         }
         static double Sign_maximum_shear_stress_2D(double x, double y, double xy)
         {
@@ -1372,21 +1347,15 @@ namespace Fatige_Stress_Counting_Tool
             else
                 return Math.Sign(Min) * (Max - Min) / 2.0;
         }
-        static double Max_principal(double x, double y, double xy)
+        static double Sign_equivalent_von_mises_stress_2D(double x, double y, double xy)
         {
-            double sum = (x + y) / 2;
-            double sub = (x - y) / 2;
-            return sum + Math.Pow(((sub * sub) + xy * xy), 0.5);
-        }
-        static double Min_principal(double x, double y, double xy)
-        {
-            double sum = (x + y) / 2;
-            double sub = (x - y) / 2;
-            return sum - Math.Pow(((sub * sub) + xy * xy), 0.5);
-        }
-        static double Equivalent_von_mises_stress(double x, double y, double xy)
-        {
-            return Math.Sqrt(x * x + y * y + 3 * xy * xy - x * y);
+            double Max = Max_principal(x, y, xy);
+            double Min = Min_principal(x, y, xy);
+
+            if (Math.Abs(Max) > Math.Abs(Min))
+                return Math.Sign(Max) * Math.Sqrt(2 * (Max * Max + Min * Min - Max * Min));
+            else
+                return Math.Sign(Min) * Math.Sqrt(2 * (Max * Max + Min * Min - Max * Min));
         }
     }
 }

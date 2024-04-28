@@ -1,44 +1,36 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Collections;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
 using System.Linq;
-using System.Text;
+using System.Drawing;
 using System.Windows.Forms;
-using System.Reflection;
-using System.IO;
-
+using System.Collections.Generic;
 
 namespace Fatige_Stress_Counting_Tool
 {
     public partial class Element_Property_Form : Form
     {
 
-        static bool Elm_list_enable = false;
-        static bool Koef_m_enable = false;
-        static bool Koef_k_enable = false;
-        static bool delta_enable = false;
         static bool sigma_02_enable = false;
+        static bool elm_list_enable = false;
+        static bool koef_m_enable = false;
+        static bool koef_k_enable = false;
+        static bool delta_enable = false;
         static bool ktg_enable = false;
-
-        List<int> list_;
+        readonly List<int> list_;
 
         public static bool Elm_list_enable_Pr
         {
-            get { return Elm_list_enable; }
-            set { Elm_list_enable = value; }
+            get { return elm_list_enable; }
+            set { elm_list_enable = value; }
         }
         public static bool Koef_m_enable_Pr
         {
-            get { return Koef_m_enable; }
-            set { Koef_m_enable = value; }
+            get { return koef_m_enable; }
+            set { koef_m_enable = value; }
         }
         public static bool Koef_k_enable_Pr
         {
-            get { return Koef_k_enable; }
-            set { Koef_k_enable = value; }
+            get { return koef_k_enable; }
+            set { koef_k_enable = value; }
         }
         public static bool Delta_enable_Pr
         {
@@ -69,13 +61,13 @@ namespace Fatige_Stress_Counting_Tool
 
             foreach (TabPage a in tabControl.TabPages)
             {
-                if (!(a.Controls["Elm_list"].Enabled = Elm_list_enable))
+                if (!(a.Controls["Elm_list"].Enabled = elm_list_enable))
                     ((TextBox)a.Controls["Elm_list"]).Clear();
 
-                if(!(a.Controls["Kof_m"].Enabled = Koef_m_enable))
+                if(!(a.Controls["Kof_m"].Enabled = koef_m_enable))
                     ((TextBox)a.Controls["Kof_m"]).Clear();
 
-                if(!(a.Controls["Kof_k"].Enabled = Koef_k_enable))
+                if(!(a.Controls["Kof_k"].Enabled = koef_k_enable))
                     ((TextBox)a.Controls["Kof_k"]).Clear();
 
                 if(!(a.Controls["Sigma_02"].Enabled = Sigma_02_enable))
@@ -195,7 +187,7 @@ namespace Fatige_Stress_Counting_Tool
             textBox_1.MaxLength = 1000000;
             textBox_1.Multiline = true;
             textBox_1.TextChanged += new System.EventHandler(TextBox1_TextChanged);
-            textBox_1.Enabled = Elm_list_enable;
+            textBox_1.Enabled = elm_list_enable;
             // 
             // textBox2
             // 
@@ -203,7 +195,7 @@ namespace Fatige_Stress_Counting_Tool
             textBox_2.Name = "Kof_m";
             textBox_2.Size = new Size(64, 22);
             textBox_2.TextChanged += new System.EventHandler(TextBox_TextChanged);
-            textBox_2.Enabled = Koef_m_enable;
+            textBox_2.Enabled = koef_m_enable;
             // 
             // textBox3
             // 
@@ -211,7 +203,7 @@ namespace Fatige_Stress_Counting_Tool
             textBox_3.Name = "Kof_k";
             textBox_3.Size = new Size(64, 22);
             textBox_3.TextChanged += new System.EventHandler(TextBox_TextChanged);
-            textBox_3.Enabled = Koef_k_enable;
+            textBox_3.Enabled = koef_k_enable;
             // 
             // textBox4
             // 

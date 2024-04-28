@@ -2,13 +2,14 @@
 using System.Windows.Forms;
 using System.IO;
 using System.Threading;
+using Fatige_Stress_Counting_Tool.Enums;
 
 namespace Fatige_Stress_Counting_Tool
 {
     public partial class Main_Form : Form
     {
 
-        public static string Stress_1D_2D_3D { get; private set; } = "1_D";
+        public static StressTypeEnum StressType { get; private set; } = StressTypeEnum.OneDimensional;
         public string Cyclogramm_File_Name1 { get; set; }
 
         public Main_Form()
@@ -55,7 +56,7 @@ namespace Fatige_Stress_Counting_Tool
             if (openfiledialog.ShowDialog() == DialogResult.OK)
             {
                 Engine.Report_File_Name = openfiledialog.FileName;
-                Stress_1D_2D_3D = "1_D";
+                StressType = StressTypeEnum.OneDimensional;
 
                 Element_Property_Enabling(true, true, false, false, true, true);
             }
@@ -71,8 +72,8 @@ namespace Fatige_Stress_Counting_Tool
             if (openfiledialog.ShowDialog() == DialogResult.OK)
             {
                 Engine.Report_File_Name = openfiledialog.FileName;
-                Stress_1D_2D_3D = "2_D";
-                Engine.Multiaxial_stress = "2D_1";
+                StressType = StressTypeEnum.TwoDimensional;
+                Engine.Multiaxial_stress = StressCalculationTypeEnum.SignVonMises2D;
 
                 Element_Property_Enabling(true, true, true, false, false, false);
             }
@@ -89,8 +90,8 @@ namespace Fatige_Stress_Counting_Tool
             if (openfiledialog.ShowDialog() == DialogResult.OK)
             {
                 Engine.Report_File_Name = openfiledialog.FileName;
-                Stress_1D_2D_3D = "3_D";
-                Engine.Multiaxial_stress = "3D_1";
+                StressType = StressTypeEnum.ThreeDimensional;
+                //Engine.Multiaxial_stress = StressTypeEnum.;
 
                 Element_Property_Enabling(true, true, false, false, true, true);
             }
@@ -162,7 +163,7 @@ namespace Fatige_Stress_Counting_Tool
             }
 
 
-            if (!Mean_Stress_Correction_Class.choosing_equation_Pr)
+            if (!Mean_Stress_Correction_Class.Choosing_equation_Pr)
             {
                 MessageBox.Show("Choose one of equation !                                              ", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
@@ -170,7 +171,7 @@ namespace Fatige_Stress_Counting_Tool
 
 
 
-            if (Engine.Stress_equation == "walker")
+            if (Engine.Stress_equation == MeanStressCorrectionEnum.Walker)
             {
                 if (Engine.Coef_a_walker == 0)
                 {
@@ -215,14 +216,14 @@ namespace Fatige_Stress_Counting_Tool
             #endregion
 
 
-            if (Stress_1D_2D_3D == "1_D")
+            if (StressType == StressTypeEnum.OneDimensional)
             {
                 Thread d_1 = new Thread(new ThreadStart(engine_.Engine_for_1D));
                 d_1.Start();
             }
-            else if (Stress_1D_2D_3D == "2_D")
+            else if (StressType == StressTypeEnum.TwoDimensional)
             {
-                if (Engine.Multiaxial_stress == "2D_5")
+                if (Engine.Multiaxial_stress == StressCalculationTypeEnum.CriticalPlane)
                 {
                     Thread d_2 = new Thread(new ThreadStart(engine_.Engine_for_2D_critical_plane));
                     d_2.Start();

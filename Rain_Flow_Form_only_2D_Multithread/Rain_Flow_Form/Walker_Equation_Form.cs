@@ -1,10 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 
 namespace Fatige_Stress_Counting_Tool
@@ -16,11 +10,10 @@ namespace Fatige_Stress_Counting_Tool
             InitializeComponent();
         }
 
-
         double w_a;
         double w_g;
 
-        private void button1_Click(object sender, EventArgs e)
+        private void Button1_Click(object sender, EventArgs e)
         {
 
             if (textBox1.Text == "")
@@ -66,7 +59,7 @@ namespace Fatige_Stress_Counting_Tool
             Close();
         }
 
-        private void textBox1_TextChanged(object sender, EventArgs e)
+        private void TextBox1_TextChanged(object sender, EventArgs e)
         {
             if (!double.TryParse(textBox1.Text, out w_a) && textBox1.Text != "")
             {
@@ -74,7 +67,7 @@ namespace Fatige_Stress_Counting_Tool
             }
         }
 
-        private void textBox2_TextChanged(object sender, EventArgs e)
+        private void TextBox2_TextChanged(object sender, EventArgs e)
         {
             if (!double.TryParse(textBox2.Text, out w_g) && textBox2.Text != "")
             {
