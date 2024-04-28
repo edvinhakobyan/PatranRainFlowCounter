@@ -130,18 +130,14 @@ namespace Fatige_Stress_Counting_Tool
                                                   "SUBTITLE 1" + Environment.NewLine + "SUBTITLE 2");
 
             Console.WriteLine("Start Solving....");
-
-            string outtext = "";
             var time = DateTime.Now;
-            int Element_id = 0;
-            double Sigma_equiv = 0.0;
             double[] stress_x_direction = new double[Load_Case_Count];
 
             for (int i = 0; i < Element_Count; i++)
             {
                 read.BaseStream.Position = i * 16;
 
-                Element_id = (int)read.ReadInt64();
+                int Element_id = (int)read.ReadInt64();
                 Cof_m = Elm_prop_Pr[Element_id][0];
 
                 for (int j = 0; j < Load_Case_Count; j++)
@@ -151,6 +147,7 @@ namespace Fatige_Stress_Counting_Tool
                 }
 
 
+                double Sigma_equiv;
                 switch (Cycle_method_Pr)
                 {
                     case "rain_flow": Sigma_equiv = Rain_flow_method(Oneaxial_stress_cycle(cycl_matrix, stress_x_direction), Cof_m); break;
@@ -159,7 +156,7 @@ namespace Fatige_Stress_Counting_Tool
                 }
 
 
-                outtext = Element_id + Environment.NewLine + Exponent_String_Format(Sigma_equiv);
+                string outtext = Element_id + Environment.NewLine + Exponent_String_Format(Sigma_equiv);
 
                 equivalent_stress_file.WriteLine(outtext);
 
@@ -672,7 +669,6 @@ namespace Fatige_Stress_Counting_Tool
             int a_cols = a.GetLength(1);
             int b_cols = b.GetLength(1);
 
-            //for (int i = 0; i < a_rows; i++)
             Parallel.For(0, a_rows, i =>
             {
                 double[] stress_component = new double[b_cols];
@@ -1114,6 +1110,157 @@ namespace Fatige_Stress_Counting_Tool
             }
 
             Sigma_equiv = Math.Pow(Sigma_equiv, 1 / kof_m);
+
+            return Sigma_equiv;
+        }
+        static List<double[]> CalculateRainFlow(double[] rgn)
+        {
+            int k0 = rgn.Length;
+            int k_tol = 8;
+
+            // Initialize arrays
+            var buff = new double[k0 + 1];
+            var xbuff = new double[k0 + 1];
+            var x_cyc = new List<double[]>();
+
+            // Initialize variables
+            double xa, xm, sig;
+            int kMaxVal = 0, s = 0;
+            bool k_log = false;
+
+            // Fill xbuff array
+            for (int i = 0; i < k0; i++)
+            {
+                xbuff[i] = Math.Round(rgn[i], k_tol);
+            }
+            xbuff[k0] = xbuff[0];
+
+            // If less than 3 data points, return 0
+            if (k0 < 3)
+            {
+                goto stp5;
+            }
+
+            double maxVal = xbuff[0];
+
+            // Find maximum value and its index
+            for (int i = 1; i <= k0; i++)
+            {
+                if (xbuff[k0 - i + 1] != xbuff[k0 - i])
+                {
+                    k_log = xbuff[k0 - i + 1] > xbuff[k0 - i];
+                    s = 1;
+                    break;
+                }
+            }
+
+            // If all data points are same, return 0
+            if (s == 0)
+            {
+                goto stp5;
+            }
+
+            // Process data points to find cycles
+            int j = -1;
+            for (int i = 0; i < k0; i++)
+            {
+                if (k_log && xbuff[i + 1] < xbuff[i])
+                {
+                    j++;
+                    k_log = !k_log;
+                    buff[j] = xbuff[i];
+
+                    // Update maximum value and its index
+                    if (buff[j] >= maxVal)
+                    {
+                        maxVal = buff[j];
+                        kMaxVal = j;
+                    }
+                }
+                else if (!k_log && xbuff[i + 1] > xbuff[i])
+                {
+                    j++;
+                    k_log = !k_log;
+                    buff[j] = xbuff[i];
+                }
+            }
+
+            // Rearrange data points to create cycles
+            int m = -1;
+            for (int i = kMaxVal; i <= j; i++)
+            {
+                m++;
+                xbuff[m] = buff[i];
+            }
+
+            for (int i = 0; i < kMaxVal; i++) //TODO
+            {
+                m++;
+                xbuff[m] = buff[i];
+            }
+            xbuff[m + 1] = xbuff[0];
+
+            // Calculate rainflow
+            int k = -1, m_cur = -1, n = -1;
+        stp1:
+            n++; m_cur++;
+            buff[n] = xbuff[m_cur];
+        stp2:
+            if (n < 2) goto stp1;
+            double x2_cur = Math.Abs(buff[n] - buff[n - 1]);
+            double x1_cur = Math.Abs(buff[n - 1] - buff[n - 2]);
+        stp3:
+            if (x2_cur < x1_cur) goto stp1;
+            stp4:
+            x_cyc.Add(new double[] { buff[n - 2], buff[n - 1] });
+
+            n -= 2;
+            buff[n] = buff[n + 2];
+            if (n == 0) xbuff[m + 1] = buff[0];
+            if (m_cur == m + 1 && n == 0) goto stp5;
+            goto stp2;
+        stp5:
+
+
+            for (int i = 0; i < x_cyc.Count; i++)
+            {
+                if (x_cyc[i][0] > x_cyc[i][1])
+                {
+                    var temp = x_cyc[i][1];
+                    x_cyc[i][1] = x_cyc[i][0];
+                    x_cyc[i][0] = temp;
+                }
+            }
+
+            return x_cyc;
+        }
+        static double CalculateEquvalentStress(List<double[]> x_cyc, double kof_m)
+        {
+            // Calculate equivalent stress for each cycle
+            var Sigma_equiv = 0.0;
+            foreach (var cyc in x_cyc)
+            {
+                double Sigma_equiv_i = 0;
+                switch (Stress_equation_Pr)
+                {
+                    case "cai": Sigma_equiv_i = Cai_Equation(cyc[0], cyc[1]); break;
+                    case "cai_new": Sigma_equiv_i = Cai_New_Equation(cyc[0], cyc[1], Sig_02, Ktg); break;
+                    case "walker": Sigma_equiv_i = Walker_Equation(cyc[0], cyc[1], Coef_a_walker_Pr, Coef_gama_walker_Pr); break;
+                    case "goodman": Sigma_equiv_i = Goodman_Equation(cyc[0], cyc[1], Gudman_ult_stress); break;
+                    case "soderberg": Sigma_equiv_i = Soderberg_Equation(cyc[0], cyc[1]); break;
+                    case "morro": Sigma_equiv_i = Morro_Equation(cyc[0], cyc[1]); break;
+                    case "gerber": Sigma_equiv_i = Gerber_Equation(cyc[0], cyc[1]); break;
+                    case "asme": Sigma_equiv_i = ASME_Elliptic_Equation(cyc[0], cyc[1]); break;
+                    case "swt": Sigma_equiv_i = Smith_Watson_Topper_Equation(cyc[0], cyc[1]); break;
+                    case "stulen": Sigma_equiv_i = Stulen_Equation(cyc[0], cyc[1]); break;
+                    case "topper": Sigma_equiv_i = Topper_Sandor_Equation(cyc[0], cyc[1]); break;
+                    default: MessageBox.Show("Stress Equation not selected"); return 0;
+                }
+
+                Sigma_equiv += Math.Pow(Sigma_equiv_i, kof_m);
+            }
+
+            Sigma_equiv = Math.Pow(Sigma_equiv, 1 / kof_m); // Calculate final equivalent stress
 
             return Sigma_equiv;
         }
