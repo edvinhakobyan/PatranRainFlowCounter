@@ -43,7 +43,7 @@
             // 
             // OK
             // 
-            this.OK.Location = new System.Drawing.Point(392, 225);
+            this.OK.Location = new System.Drawing.Point(392, 309);
             this.OK.Name = "OK";
             this.OK.Size = new System.Drawing.Size(80, 25);
             this.OK.TabIndex = 4;
@@ -89,7 +89,7 @@
             this.tabControl.Location = new System.Drawing.Point(12, 33);
             this.tabControl.Name = "tabControl";
             this.tabControl.SelectedIndex = 0;
-            this.tabControl.Size = new System.Drawing.Size(460, 129);
+            this.tabControl.Size = new System.Drawing.Size(460, 186);
             this.tabControl.TabIndex = 1;
             // 
             // groupBox8
@@ -97,7 +97,7 @@
             this.groupBox8.Controls.Add(this.label3);
             this.groupBox8.Controls.Add(this.Delta_angle);
             this.groupBox8.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.groupBox8.Location = new System.Drawing.Point(12, 178);
+            this.groupBox8.Location = new System.Drawing.Point(12, 280);
             this.groupBox8.Name = "groupBox8";
             this.groupBox8.Size = new System.Drawing.Size(148, 55);
             this.groupBox8.TabIndex = 13;
@@ -125,7 +125,7 @@
             // 
             // progressBar1
             // 
-            this.progressBar1.Location = new System.Drawing.Point(12, 161);
+            this.progressBar1.Location = new System.Drawing.Point(12, 242);
             this.progressBar1.Name = "progressBar1";
             this.progressBar1.Size = new System.Drawing.Size(460, 11);
             this.progressBar1.TabIndex = 14;
@@ -134,7 +134,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(484, 262);
+            this.ClientSize = new System.Drawing.Size(484, 365);
             this.Controls.Add(this.progressBar1);
             this.Controls.Add(this.groupBox8);
             this.Controls.Add(this.Remuv_All_Tab);
@@ -145,7 +145,7 @@
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
-            this.MaximumSize = new System.Drawing.Size(1000, 300);
+            this.MaximumSize = new System.Drawing.Size(1000, 1000);
             this.MinimumSize = new System.Drawing.Size(400, 300);
             this.Name = "Element_Property_Form";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;

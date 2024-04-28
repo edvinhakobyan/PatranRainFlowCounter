@@ -20,6 +20,8 @@ namespace Fatige_Stress_Counting_Tool
         static bool Koef_m_enable = false;
         static bool Koef_k_enable = false;
         static bool delta_enable = false;
+        static bool sigma_02_enable = false;
+        static bool ktg_enable = false;
 
         List<int> list_;
 
@@ -38,12 +40,22 @@ namespace Fatige_Stress_Counting_Tool
             get { return Koef_k_enable; }
             set { Koef_k_enable = value; }
         }
-        public static bool delta_enable_Pr
+        public static bool Delta_enable_Pr
         {
             get { return delta_enable; }
             set { delta_enable = value; }
         }
 
+        public static bool Sigma_02_enable
+        {
+            get { return sigma_02_enable; }
+            set { sigma_02_enable = value; }
+        }
+        public static bool Ktg_enable
+        {
+            get { return ktg_enable; }
+            set { ktg_enable = value; }
+        }
         public Element_Property_Form()
         {
             InitializeComponent();
@@ -54,6 +66,7 @@ namespace Fatige_Stress_Counting_Tool
         private void Element_Property_Form_Load(object sender, EventArgs e)
         {
             Delta_angle.Enabled = delta_enable;
+
             foreach (TabPage a in tabControl.TabPages)
             {
                 if (!(a.Controls["Elm_list"].Enabled = Elm_list_enable))
@@ -64,6 +77,12 @@ namespace Fatige_Stress_Counting_Tool
 
                 if(!(a.Controls["Kof_k"].Enabled = Koef_k_enable))
                     ((TextBox)a.Controls["Kof_k"]).Clear();
+
+                if(!(a.Controls["Sigma_02"].Enabled = Sigma_02_enable))
+                    ((TextBox)a.Controls["Sigma_02"]).Clear();
+
+                if(!(a.Controls["Ktg"].Enabled = Ktg_enable))
+                    ((TextBox)a.Controls["Ktg"]).Clear();
             }
         }
 
@@ -102,87 +121,121 @@ namespace Fatige_Stress_Counting_Tool
             Label label_5 = new Label();
             Label label_6 = new Label();
             Label label_7 = new Label();
+            Label label_8 = new Label();
+            Label label_9 = new Label();
 
             TextBox textBox_1 = new TextBox();
             TextBox textBox_2 = new TextBox();
             TextBox textBox_3 = new TextBox();
+            TextBox textBox_4 = new TextBox();
+            TextBox textBox_5 = new TextBox();
             // 
             // label1
             // 
-            label_1.Location = new System.Drawing.Point(5, 15);
+            label_1.Location = new Point(5, 15);
             label_1.Name = "label1";
-            label_1.Size = new System.Drawing.Size(67, 16);
+            label_1.Size = new Size(67, 16);
             label_1.Text = "Elements:";
             // 
             // label2
             // 
-            label_2.Location = new System.Drawing.Point(5, 40);
+            label_2.Location = new Point(5, 40);
             label_2.Name = "label2";
-            label_2.Size = new System.Drawing.Size(87, 16);
+            label_2.Size = new Size(87, 16);
             label_2.Text = "Coefficient m:";
             // 
             // label3
             // 
-            label_3.Location = new System.Drawing.Point(5, 65);
+            label_3.Location = new Point(5, 65);
             label_3.Name = "label3";
-            label_3.Size = new System.Drawing.Size(84, 16);
+            label_3.Size = new Size(84, 16);
             label_3.Text = "Coefficient K:";
             // label4
             // 
-            label_4.Location = new System.Drawing.Point(320, 45);
+            label_4.Location = new Point(320, 45);
             label_4.Name = "label4";
-            label_4.Size = new System.Drawing.Size(100, 15);
+            label_4.Size = new Size(100, 15);
             label_4.Text = "0";
             // label5
             // 
-            label_5.Location = new System.Drawing.Point(180, 45);
+            label_5.Location = new Point(180, 45);
             label_5.Name = "label5";
-            label_5.Size = new System.Drawing.Size(180, 16);
-            label_5.Text = "Line Character Count :";
+            label_5.Size = new Size(180, 16);
+            label_5.Text = "Character Count :";
             // label6
             // 
-            label_6.Location = new System.Drawing.Point(320, 65);
-            label_6.Name = "label4";
-            label_6.Size = new System.Drawing.Size(100, 15);
+            label_6.Location = new Point(320, 65);
+            label_6.Name = "label6";
+            label_6.Size = new Size(100, 15);
             label_6.Text = "0";
-            // labelt
+            // label7
             // 
-            label_7.Location = new System.Drawing.Point(180, 65);
-            label_7.Name = "label5";
-            label_7.Size = new System.Drawing.Size(100, 16);
+            label_7.Location = new Point(180, 65);
+            label_7.Name = "label7";
+            label_7.Size = new Size(100, 16);
             label_7.Text = "Element Count :";
+            // label8
+            // 
+            label_8.Location = new Point(5, 90);
+            label_8.Name = "label8";
+            label_8.Size = new Size(100, 16);
+            label_8.Text = "σ_0.2";
+            // label9
+            // 
+            label_9.Location = new Point(5, 115);
+            label_9.Name = "label9";
+            label_9.Size = new Size(100, 16);
+            label_9.Text = "Ktg :";
             // 
             // textBox1
             // 
-            textBox_1.Location = new System.Drawing.Point(105, 15);
+            textBox_1.Location = new Point(105, 15);
             textBox_1.Name = "Elm_list";
-            textBox_1.Size = new System.Drawing.Size(320, 22);
+            textBox_1.Size = new Size(320, 22);
             textBox_1.MaxLength = 1000000;
             textBox_1.Multiline = true;
-            textBox_1.TextChanged += new System.EventHandler(textBox1_TextChanged);
+            textBox_1.TextChanged += new System.EventHandler(TextBox1_TextChanged);
             textBox_1.Enabled = Elm_list_enable;
             // 
             // textBox2
             // 
-            textBox_2.Location = new System.Drawing.Point(105, 40);
+            textBox_2.Location = new Point(105, 40);
             textBox_2.Name = "Kof_m";
-            textBox_2.Size = new System.Drawing.Size(64, 22);
-            textBox_2.TextChanged += new System.EventHandler(textBox_TextChanged);
+            textBox_2.Size = new Size(64, 22);
+            textBox_2.TextChanged += new System.EventHandler(TextBox_TextChanged);
             textBox_2.Enabled = Koef_m_enable;
             // 
             // textBox3
             // 
-            textBox_3.Location = new System.Drawing.Point(105, 65);
+            textBox_3.Location = new Point(105, 65);
             textBox_3.Name = "Kof_k";
-            textBox_3.Size = new System.Drawing.Size(64, 22);
-            textBox_3.TextChanged += new System.EventHandler(textBox_TextChanged);
+            textBox_3.Size = new Size(64, 22);
+            textBox_3.TextChanged += new System.EventHandler(TextBox_TextChanged);
             textBox_3.Enabled = Koef_k_enable;
+            // 
+            // textBox4
+            // 
+            textBox_4.Location = new Point(105, 90);
+            textBox_4.Name = "Sigma_02";
+            textBox_4.Size = new Size(64, 22);
+            textBox_4.TextChanged += new EventHandler(TextBox_TextChanged);
+            textBox_4.Enabled = Sigma_02_enable;
+            // 
+            // textBox4
+            // 
+            textBox_5.Location = new Point(105, 115);
+            textBox_5.Name = "Ktg";
+            textBox_5.Size = new Size(64, 22);
+            textBox_5.TextChanged += new EventHandler(TextBox_TextChanged);
+            textBox_5.Enabled = Ktg_enable;
             // 
             // tabPage
             // 
             tabPage.Controls.Add(textBox_1);
             tabPage.Controls.Add(textBox_2);
             tabPage.Controls.Add(textBox_3);
+            tabPage.Controls.Add(textBox_4);
+            tabPage.Controls.Add(textBox_5);
             tabPage.Controls.Add(label_1);
             tabPage.Controls.Add(label_2);
             tabPage.Controls.Add(label_3);
@@ -190,19 +243,21 @@ namespace Fatige_Stress_Counting_Tool
             tabPage.Controls.Add(label_5);
             tabPage.Controls.Add(label_6);
             tabPage.Controls.Add(label_7);
+            tabPage.Controls.Add(label_8);
+            tabPage.Controls.Add(label_9);
             tabPage.BorderStyle = BorderStyle.FixedSingle;
-            tabPage.Location = new System.Drawing.Point(5, 25);
+            tabPage.Location = new Point(5, 25);
             tabPage.Name = "tabPage";
             tabPage.Padding = new System.Windows.Forms.Padding(3);
-            tabPage.Size = new System.Drawing.Size(310, 100);
+            tabPage.Size = new Size(310, 100);
             tabPage.TabIndex = tabControl.TabPages.Count;
-            tabPage.Text = "Elm Grup " + dic_list();
+            tabPage.Text = "Elm Grup " + Dic_list();
             tabPage.UseVisualStyleBackColor = true;
 
             tabControl.Controls.Add(tabPage);
         }
 
-        private int dic_list()
+        private int Dic_list()
         {
             if (list_.Count == 0)
             {
@@ -222,17 +277,17 @@ namespace Fatige_Stress_Counting_Tool
             return list_.Count - 1;
         }
 
-        private void textBox1_TextChanged(object sender, EventArgs e)
+        private void TextBox1_TextChanged(object sender, EventArgs e)
         {
             List<int> a = null;
             TextBox tb = sender as TextBox;
-            Label lb1 = tb.Parent.Controls[6] as Label;
-            Label lb2 = tb.Parent.Controls[8] as Label;
+            Label lb1 = tb.Parent.Controls[8] as Label;
+            Label lb2 = tb.Parent.Controls[10] as Label;
             if (tb.Text != "")
             {
                 try
                 {
-                    a = elem_id_list(tb.Text);
+                    a = Elem_id_list(tb.Text);
                 }
                 catch
                 {
@@ -249,11 +304,10 @@ namespace Fatige_Stress_Counting_Tool
             lb2.Text = a.Count.ToString();
         }
 
-        private void textBox_TextChanged(object sender, EventArgs e)
+        private void TextBox_TextChanged(object sender, EventArgs e)
         {
             TextBox tb = sender as TextBox;
-            double a;
-            if (!double.TryParse(tb.Text, out a) && tb.Text != "")
+            if (!double.TryParse(tb.Text, out double a) && tb.Text != "")
             {
                 tb.Clear();
             }
@@ -267,7 +321,7 @@ namespace Fatige_Stress_Counting_Tool
             for (int i = 0; i < tabControl.Controls.Count; i++)
             {
                 List<int> elm_list = new List<int>();
-                double m = 0, k = 0;
+                double m = 0, k = 0, sig02 = 0, ktg = 0;
 
                 if (tabControl.Controls[i].Controls[0].Enabled)
                 {
@@ -278,7 +332,7 @@ namespace Fatige_Stress_Counting_Tool
                     }
                     else
                     {
-                        elm_list = elem_id_list(((TextBox)(tabControl.Controls[i].Controls[0])).Text);
+                        elm_list = Elem_id_list(((TextBox)(tabControl.Controls[i].Controls[0])).Text);
                     }
                 }
 
@@ -310,6 +364,32 @@ namespace Fatige_Stress_Counting_Tool
                     }
                 }
 
+                if (tabControl.Controls[i].Controls[3].Enabled)
+                {
+                    if (tabControl.Controls[i].Controls[3].Text == "")
+                    {
+                        MessageBox.Show("σ_0.2 in <" + ((TextBox)(tabControl.Controls[i].Controls[3])).Parent.Text + "> is Empty");
+                        return;
+                    }
+                    else
+                    {
+                        sig02 = double.Parse(((TextBox)(tabControl.Controls[i].Controls[3])).Text);
+                    }
+                }
+
+                if (tabControl.Controls[i].Controls[4].Enabled)
+                {
+                    if (tabControl.Controls[i].Controls[4].Text == "")
+                    {
+                        MessageBox.Show("Ktg in <" + ((TextBox)(tabControl.Controls[i].Controls[4])).Parent.Text + "> is Empty");
+                        return;
+                    }
+                    else
+                    {
+                        ktg = double.Parse(((TextBox)(tabControl.Controls[i].Controls[4])).Text);
+                    }
+                }
+
                 for (int j = 0; j < elm_list.Count; j++)
                 {
 
@@ -317,7 +397,7 @@ namespace Fatige_Stress_Counting_Tool
                     // already in the dictionary.
                     try
                     {
-                        dic.Add(elm_list[j], new double[] { m, k });
+                        dic.Add(elm_list[j], new double[] { m, k, sig02, ktg });
                     }
                     catch (ArgumentException)
                     {
@@ -337,22 +417,22 @@ namespace Fatige_Stress_Counting_Tool
                 }
                 else
                 {
-                    engine.Delta_Pr = double.Parse(Delta_angle.Text);
+                    Engine.Delta_Pr = double.Parse(Delta_angle.Text);
                 }
             }
 
 
             //dic = dic.OrderBy(x => x.Key).ToDictionary(x => x.Key, x => x.Value);
 
-            engine.elm_prop_Pr = dic;
+            Engine.Elm_prop_Pr = dic;
 
             if(Delta_angle.Enabled)
-            engine.Delta_Pr = double.Parse(Delta_angle.Text);
+            Engine.Delta_Pr = double.Parse(Delta_angle.Text);
 
             Close();
         }
 
-        static List<int> elem_id_list(string input)
+        static List<int> Elem_id_list(string input)
         {
             List<int> elem_id = new List<int>();
 
@@ -370,32 +450,18 @@ namespace Fatige_Stress_Counting_Tool
                 int char_count = a[i].Count(f => f == ':');
 
                 if (char_count == 0)
-                {
                     elem_id.Add(int.Parse(a[i]));
-                }
-                else if (char_count == 1)
-                {
-                    int fairst_id = int.Parse(a[i].Split(split_2)[0]);
-                    int last_id = int.Parse(a[i].Split(split_2)[1]);
-
-                    for (int j = fairst_id; j <= last_id; j++)
-                    {
-                        elem_id.Add(j);
-                    }
-                }
-                else if (char_count == 2)
+                else
                 {
                     int first_id = int.Parse(a[i].Split(split_2)[0]);
                     int last_id = int.Parse(a[i].Split(split_2)[1]);
-                    int increment = int.Parse(a[i].Split(split_2)[2]);
+                    int increment = char_count == 2 ? int.Parse(a[i].Split(split_2)[2]) : 1;
 
                     if (first_id < last_id)
-
                         for (int j = first_id; j <= last_id; j += increment)
                             elem_id.Add(j);
 
                     if (first_id > last_id)
-
                         for (int j = first_id; j >= last_id; j += increment)
                             elem_id.Add(j);
                 }
@@ -406,32 +472,10 @@ namespace Fatige_Stress_Counting_Tool
 
         private void Delta_angle_TextChanged(object sender, EventArgs e)
         {
-            double a;
-            if (!double.TryParse(Delta_angle.Text, out a) && Delta_angle.Text != "")
+            if (!double.TryParse(Delta_angle.Text, out double a) && Delta_angle.Text != "")
             {
                 Delta_angle.Clear();
             }
         }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     }
 }

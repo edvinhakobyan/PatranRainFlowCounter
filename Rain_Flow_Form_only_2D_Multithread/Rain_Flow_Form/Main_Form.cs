@@ -7,14 +7,9 @@ namespace Fatige_Stress_Counting_Tool
 {
     public partial class Main_Form : Form
     {
-        string Cyclogramm_File_Name;
-        static string stress_1D_2D_3D = "1_D";
 
-
-        public static string Stress_1D_2D_3D
-        {
-            get { return stress_1D_2D_3D; }
-        }
+        public static string Stress_1D_2D_3D { get; private set; } = "1_D";
+        public string Cyclogramm_File_Name1 { get; set; }
 
         public Main_Form()
         {
@@ -23,15 +18,22 @@ namespace Fatige_Stress_Counting_Tool
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            string lic = File.ReadAllText("\\\\192.168.0.1\\Projects\\SCAC\\Work Data\\hakobyan.edvin.a\\Lic.txt");
-            License(long.Parse(lic));
+            //try
+            //{
+            //    string lic = File.ReadAllText(@"\\192.168.0.1\Projects\SCAC\Work Data\hakobyan.edvin.a\Lic.txt");
+            //}
+            //catch
+            //{
+            //    MessageBox.Show("!!!!File Not Found!!!!                                ", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            //    return;
+            //}
         }
 
         OpenFileDialog openfiledialog = new OpenFileDialog();
         SaveFileDialog savefiledialog = new SaveFileDialog();
         FolderBrowserDialog folder = new FolderBrowserDialog();
-        
-        engine engine_ = new engine();
+
+        Engine engine_ = new Engine();
         Form3 Forma_3 = new Form3();
         Mean_Stress_Correction_Class stress_correct = new Mean_Stress_Correction_Class();
         Form5 Forma_5 = new Form5();
@@ -41,8 +43,6 @@ namespace Fatige_Stress_Counting_Tool
         Cyclogram_File_Format cyclogram_file_format = new Cyclogram_File_Format();
         Element_Property_Form elm_prop_elm = new Element_Property_Form();
 
-
-        
 
 
         private void Atach_1D_Report_File_Click(object sender, EventArgs e)
@@ -54,11 +54,10 @@ namespace Fatige_Stress_Counting_Tool
 
             if (openfiledialog.ShowDialog() == DialogResult.OK)
             {
-                engine.Report_File_Name_Pr = openfiledialog.FileName;
-                stress_1D_2D_3D = "1_D";
+                Engine.Report_File_Name_Pr = openfiledialog.FileName;
+                Stress_1D_2D_3D = "1_D";
 
-                Element_Property_Enabling(true, true, false, false);
-
+                Element_Property_Enabling(true, true, false, false, true, true);
             }
         }
 
@@ -71,13 +70,12 @@ namespace Fatige_Stress_Counting_Tool
 
             if (openfiledialog.ShowDialog() == DialogResult.OK)
             {
-                engine.Report_File_Name_Pr = openfiledialog.FileName;
-                stress_1D_2D_3D = "2_D";
-                engine.Multiaxial_stress_Pr = "2D_1";
+                Engine.Report_File_Name_Pr = openfiledialog.FileName;
+                Stress_1D_2D_3D = "2_D";
+                Engine.Multiaxial_stress_Pr = "2D_1";
 
-                Element_Property_Enabling(true, true, true, false);
+                Element_Property_Enabling(true, true, true, false, false, false);
             }
-
         }
 
         private void Atach_3D_Report_File_Click(object sender, EventArgs e)
@@ -90,12 +88,11 @@ namespace Fatige_Stress_Counting_Tool
 
             if (openfiledialog.ShowDialog() == DialogResult.OK)
             {
-                engine.Report_File_Name_Pr = openfiledialog.FileName;
-                stress_1D_2D_3D = "3_D";
-                engine.Multiaxial_stress_Pr = "3D_1";
+                Engine.Report_File_Name_Pr = openfiledialog.FileName;
+                Stress_1D_2D_3D = "3_D";
+                Engine.Multiaxial_stress_Pr = "3D_1";
 
-                Element_Property_Enabling(true, true, false, false);
-                
+                Element_Property_Enabling(true, true, false, false, true, true);
             }
         }
 
@@ -109,8 +106,8 @@ namespace Fatige_Stress_Counting_Tool
 
             if (openfiledialog.ShowDialog() == DialogResult.OK)
             {
-                Cyclogramm_File_Name = openfiledialog.FileName;
-                engine.Ciclogramm_File_Name_Pr = Cyclogramm_File_Name;
+                Cyclogramm_File_Name1 = openfiledialog.FileName;
+                Engine.Ciclogramm_File_Name_Pr = Cyclogramm_File_Name1;
             }
         }
 
@@ -128,14 +125,14 @@ namespace Fatige_Stress_Counting_Tool
                 string[] Templet_File_Name = savefiledialog.FileName.Split(sep);
                 for (int i = 0; i < Templet_File_Name.Length - 1; i++)
                 {
-                    engine.Templet_File_Name_Pr += (Templet_File_Name[i] + "\\");
-                    engine.Temporary_File_Name_Pr += (Templet_File_Name[i] + "\\");
+                    Engine.Templet_File_Name_Pr += (Templet_File_Name[i] + "\\");
+                    Engine.Temporary_File_Name_Pr += (Templet_File_Name[i] + "\\");
                 }
-                engine.Templet_File_Name_Pr += "Stress_Templ.res_tmpl";
-                engine.Temporary_File_Name_Pr += "Report_Temporary.txt";
+                Engine.Templet_File_Name_Pr += "Stress_Templ.res_tmpl";
+                Engine.Temporary_File_Name_Pr += "Report_Temporary.txt";
 
-                engine.Result_File_Name_Pr = savefiledialog.FileName;
-                
+                Engine.Result_File_Name_Pr = savefiledialog.FileName;
+
             }
 
         }
@@ -143,24 +140,24 @@ namespace Fatige_Stress_Counting_Tool
         private void Run_Click(object sender, EventArgs e)
         {
 
-             engine.Console_Show_Or_No_Pr = Show_Consol.Checked;
+            Engine.Console_Show_Or_No_Pr = Show_Consol.Checked;
 
-            if (!File.Exists(engine.Report_File_Name_Pr))
+            if (!File.Exists(Engine.Report_File_Name_Pr))
             {
                 MessageBox.Show("Select Report File !                                                  ", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
 
-            if (!File.Exists(engine.Ciclogramm_File_Name_Pr))
+            if (!File.Exists(Engine.Ciclogramm_File_Name_Pr))
             {
                 MessageBox.Show("Select File With Cyclograms !                                         ", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
-            if (engine.Result_File_Name_Pr == null)
+            if (Engine.Result_File_Name_Pr == null)
             {
-                MessageBox.Show("Select Path for Results !" + new string(' ',50), "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Select Path for Results !" + new string(' ', 50), "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
@@ -173,14 +170,14 @@ namespace Fatige_Stress_Counting_Tool
 
 
 
-            if (engine.Stress_equation_Pr == "walker")
+            if (Engine.Stress_equation_Pr == "walker")
             {
-                if (engine.Coef_a_walker_Pr == 0)
+                if (Engine.Coef_a_walker_Pr == 0)
                 {
                     MessageBox.Show("Coefficient A in Walker equation is not correct !                 ", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     return;
                 }
-                if (engine.Coef_gama_walker_Pr == 0)
+                if (Engine.Coef_gama_walker_Pr == 0)
                 {
                     MessageBox.Show("Coefficient Gamma in Walker equation is not correct !             ", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     return;
@@ -188,7 +185,7 @@ namespace Fatige_Stress_Counting_Tool
             }
 
 
-            if (engine.elm_prop_Pr.Count == 0)
+            if (Engine.Elm_prop_Pr.Count == 0)
             {
                 MessageBox.Show("Problem With Elements Properties !!!");
                 return;
@@ -217,15 +214,15 @@ namespace Fatige_Stress_Counting_Tool
             //}
             #endregion
 
-            
-            if (stress_1D_2D_3D == "1_D")
+
+            if (Stress_1D_2D_3D == "1_D")
             {
                 Thread d_1 = new Thread(new ThreadStart(engine_.Engine_for_1D));
                 d_1.Start();
             }
-            else if (stress_1D_2D_3D == "2_D")
+            else if (Stress_1D_2D_3D == "2_D")
             {
-                if (engine.Multiaxial_stress_Pr == "2D_5")
+                if (Engine.Multiaxial_stress_Pr == "2D_5")
                 {
                     Thread d_2 = new Thread(new ThreadStart(engine_.Engine_for_2D_critical_plane));
                     d_2.Start();
@@ -245,7 +242,7 @@ namespace Fatige_Stress_Counting_Tool
 
         private void Mean_Stress_Correction_Click(object sender, EventArgs e)
         {
-           stress_correct.ShowDialog();
+            stress_correct.ShowDialog();
         }
 
         private void Stress_Combination_Click(object sender, EventArgs e)
@@ -280,41 +277,14 @@ namespace Fatige_Stress_Counting_Tool
         }
 
 
-        private void Element_Property_Enabling(bool elm_list, bool kof_m, bool kof_k, bool delta)
+        private void Element_Property_Enabling(bool elm_list, bool kof_m, bool kof_k, bool delta, bool sig02, bool ktg)
         {
             Element_Property_Form.Elm_list_enable_Pr = elm_list;
             Element_Property_Form.Koef_m_enable_Pr = kof_m;
             Element_Property_Form.Koef_k_enable_Pr = kof_k;
-            Element_Property_Form.delta_enable_Pr = delta;
+            Element_Property_Form.Delta_enable_Pr = delta;
+            Element_Property_Form.Sigma_02_enable = sig02;
+            Element_Property_Form.Ktg_enable = ktg;
         }
-
-
-        static void License(long a)
-        {
-            DateTime now = DateTime.Now;
-            DateTime end = DateTime.FromBinary(0);
-
-            try
-            {
-                end = DateTime.FromBinary(a);
-            }
-            catch
-            {
-                MessageBox.Show("!!!!????!!!!                                ", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                Environment.Exit(0);
-            }
-
-            //DateTime end1 = DateTime.Parse("30.12.2018"); //gtnel datain hamapatasxan long
-            //long iii = end1.ToBinary();
-
- 
-            bool flag = (DateTime.Compare(now, end) > 0) ? true : false;
-            if (flag)
-            {
-                MessageBox.Show("!!!!????!!!!                                ", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                Environment.Exit(0);
-            }
-        }
-
     }
 }

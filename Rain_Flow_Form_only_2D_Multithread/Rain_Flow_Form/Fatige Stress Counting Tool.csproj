@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
@@ -11,8 +11,7 @@
     <RootNamespace>Fatige_Stress_Counting_Tool</RootNamespace>
     <AssemblyName>Fatige Stress Counting Tool</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
-    <TargetFrameworkProfile>
-    </TargetFrameworkProfile>
+    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
@@ -29,7 +28,7 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
     <PlatformTarget>x86</PlatformTarget>
     <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
+    <Optimize>false</Optimize>
     <OutputPath>bin\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
@@ -46,13 +45,13 @@
   <PropertyGroup>
     <StartupObject />
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
-    <PlatformTarget>x64</PlatformTarget>
-    <OutputPath>bin\x64\Debug\</OutputPath>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <OutputPath>bin\Debug\</OutputPath>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
-    <PlatformTarget>x64</PlatformTarget>
-    <OutputPath>bin\x64\Release\</OutputPath>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|AnyCPU'">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <OutputPath>bin\Release\</OutputPath>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -62,13 +61,19 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Cai_New_equation_Form.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Cai_New_equation_Form.Designer.cs">
+      <DependentUpon>Cai_New_equation_Form.cs</DependentUpon>
+    </Compile>
     <Compile Include="Cai_equation_Form.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Cai_equation_Form.Designer.cs">
       <DependentUpon>Cai_equation_Form.cs</DependentUpon>
     </Compile>
-    <Compile Include="engine.cs" />
+    <Compile Include="Engine.cs" />
     <Compile Include="Cyclogram File Format.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -80,6 +85,12 @@
     </Compile>
     <Compile Include="Element_Property_Form.Designer.cs">
       <DependentUpon>Element_Property_Form.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Goodman_Equation_Form.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Goodman_Equation_Form.Designer.cs">
+      <DependentUpon>Goodman_Equation_Form.cs</DependentUpon>
     </Compile>
     <Compile Include="Main_Form.cs">
       <SubType>Form</SubType>
@@ -131,6 +142,9 @@
     <Compile Include="Walker_Equation_Form.Designer.cs">
       <DependentUpon>Walker_Equation_Form.cs</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="Cai_New_equation_Form.resx">
+      <DependentUpon>Cai_New_equation_Form.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Cai_equation_Form.resx">
       <DependentUpon>Cai_equation_Form.cs</DependentUpon>
     </EmbeddedResource>
@@ -139,6 +153,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Element_Property_Form.resx">
       <DependentUpon>Element_Property_Form.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Goodman_Equation_Form.resx">
+      <DependentUpon>Goodman_Equation_Form.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Main_Form.resx">
       <DependentUpon>Main_Form.cs</DependentUpon>
@@ -185,7 +202,6 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <None Include="Resources\1.rtf" />
     <None Include="Resources\ASME_Elliptic.rtf" />
     <None Include="Resources\Cai.rtf" />
     <None Include="Resources\Gerber.rtf" />
@@ -204,6 +220,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="001.ico" />
+    <None Include="Resources\pictureBox1.Image.bmp" />
     <None Include="Resources\TextFile1.txt" />
     <None Include="Resources\Walker__pic.bmp" />
     <None Include="Resources\Walker_pic.bmp" />
@@ -217,7 +234,6 @@
     <None Include="Resources\Cai_pic.bmp" />
     <None Include="Resources\ASME_Elliptic_pic.bmp" />
     <None Include="Resources\Gudman.bmp" />
-    <None Include="Resources\Image1.bmp" />
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Service References\" />

@@ -13,7 +13,7 @@ namespace Fatige_Stress_Counting_Tool
 
         static void Main()
         {
-            Console.Title = "Completed Percent " + 0 + "%";
+            Console.Title = "Completed " + 0 + "%";
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new Main_Form());

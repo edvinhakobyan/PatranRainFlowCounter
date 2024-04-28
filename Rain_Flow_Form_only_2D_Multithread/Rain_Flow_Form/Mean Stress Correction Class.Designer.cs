@@ -50,6 +50,8 @@
             this.radioButton9 = new System.Windows.Forms.RadioButton();
             this.label10 = new System.Windows.Forms.Label();
             this.radioButton10 = new System.Windows.Forms.RadioButton();
+            this.label11 = new System.Windows.Forms.Label();
+            this.radioButton11 = new System.Windows.Forms.RadioButton();
             this.SuspendLayout();
             // 
             // label1
@@ -74,7 +76,7 @@
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(100, 285);
+            this.button1.Location = new System.Drawing.Point(100, 310);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(80, 25);
             this.button1.TabIndex = 4;
@@ -175,7 +177,6 @@
             // radioButton3
             // 
             this.radioButton3.AutoSize = true;
-            this.radioButton3.Enabled = false;
             this.radioButton3.Location = new System.Drawing.Point(240, 70);
             this.radioButton3.Name = "radioButton3";
             this.radioButton3.Size = new System.Drawing.Size(14, 13);
@@ -270,11 +271,33 @@
             this.radioButton10.UseVisualStyleBackColor = true;
             this.radioButton10.CheckedChanged += new System.EventHandler(this.radioButton10_CheckedChanged);
             // 
+            // label11
+            // 
+            this.label11.AutoSize = true;
+            this.label11.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.label11.Location = new System.Drawing.Point(15, 270);
+            this.label11.Name = "label11";
+            this.label11.Size = new System.Drawing.Size(113, 16);
+            this.label11.TabIndex = 7;
+            this.label11.Text = "CAI Eqation (new)";
+            // 
+            // radioButton11
+            // 
+            this.radioButton11.AutoSize = true;
+            this.radioButton11.Location = new System.Drawing.Point(240, 270);
+            this.radioButton11.Name = "radioButton11";
+            this.radioButton11.Size = new System.Drawing.Size(14, 13);
+            this.radioButton11.TabIndex = 8;
+            this.radioButton11.UseVisualStyleBackColor = true;
+            this.radioButton11.CheckedChanged += new System.EventHandler(this.radioButton11_CheckedChanged);
+            // 
             // Mean_Stress_Correction_Class
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(270, 318);
+            this.ClientSize = new System.Drawing.Size(274, 351);
+            this.Controls.Add(this.radioButton11);
+            this.Controls.Add(this.label11);
             this.Controls.Add(this.radioButton10);
             this.Controls.Add(this.radioButton9);
             this.Controls.Add(this.radioButton8);
@@ -332,5 +355,7 @@
         private System.Windows.Forms.RadioButton radioButton9;
         private System.Windows.Forms.Label label10;
         private System.Windows.Forms.RadioButton radioButton10;
+        private System.Windows.Forms.Label label11;
+        private System.Windows.Forms.RadioButton radioButton11;
     }
 }

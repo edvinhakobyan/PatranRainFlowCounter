@@ -52,7 +52,7 @@
             this.Volumetric = new System.Windows.Forms.ToolStripMenuItem();
             this.Cycl_File_Format = new System.Windows.Forms.ToolStripMenuItem();
             this.Run = new System.Windows.Forms.Button();
-            progressBar1 = new System.Windows.Forms.ProgressBar();
+            this.progressBar1 = new System.Windows.Forms.ProgressBar();
             this.menu.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -157,7 +157,7 @@
             this.Stress_Combination,
             this.Element_Property});
             this.toolsToolStripMenuItem.Name = "toolsToolStripMenuItem";
-            this.toolsToolStripMenuItem.Size = new System.Drawing.Size(48, 20);
+            this.toolsToolStripMenuItem.Size = new System.Drawing.Size(46, 20);
             this.toolsToolStripMenuItem.Text = "Tools";
             // 
             // Counting_Methods
@@ -210,21 +210,21 @@
             // Uniaxial
             // 
             this.Uniaxial.Name = "Uniaxial";
-            this.Uniaxial.Size = new System.Drawing.Size(132, 22);
+            this.Uniaxial.Size = new System.Drawing.Size(131, 22);
             this.Uniaxial.Text = "Uniaxial";
             this.Uniaxial.Click += new System.EventHandler(this.Uniaxial_Click);
             // 
             // Biaxial
             // 
             this.Biaxial.Name = "Biaxial";
-            this.Biaxial.Size = new System.Drawing.Size(132, 22);
+            this.Biaxial.Size = new System.Drawing.Size(131, 22);
             this.Biaxial.Text = "Biaxial";
             this.Biaxial.Click += new System.EventHandler(this.Biaxial_Click);
             // 
             // Volumetric
             // 
             this.Volumetric.Name = "Volumetric";
-            this.Volumetric.Size = new System.Drawing.Size(132, 22);
+            this.Volumetric.Size = new System.Drawing.Size(131, 22);
             this.Volumetric.Text = "Volumetric";
             this.Volumetric.Click += new System.EventHandler(this.Volumetric_Click);
             // 
@@ -240,7 +240,7 @@
             this.Run.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.Run.Location = new System.Drawing.Point(10, 40);
             this.Run.Name = "Run";
-            this.Run.Size = new System.Drawing.Size(74, 27);
+            this.Run.Size = new System.Drawing.Size(75, 25);
             this.Run.TabIndex = 1;
             this.Run.Text = "Run";
             this.Run.UseVisualStyleBackColor = true;
@@ -248,10 +248,10 @@
             // 
             // progressBar1
             // 
-            progressBar1.Location = new System.Drawing.Point(5, 572);
-            progressBar1.Name = "progressBar1";
-            progressBar1.Size = new System.Drawing.Size(413, 23);
-            progressBar1.TabIndex = 2;
+            this.progressBar1.Location = new System.Drawing.Point(5, 578);
+            this.progressBar1.Name = "progressBar1";
+            this.progressBar1.Size = new System.Drawing.Size(413, 10);
+            this.progressBar1.TabIndex = 2;
             // 
             // Main_Form
             // 
@@ -261,7 +261,7 @@
             this.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("$this.BackgroundImage")));
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
             this.ClientSize = new System.Drawing.Size(425, 597);
-            this.Controls.Add(progressBar1);
+            this.Controls.Add(this.progressBar1);
             this.Controls.Add(this.Run);
             this.Controls.Add(this.menu);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
@@ -305,7 +305,7 @@
         private System.Windows.Forms.ToolStripMenuItem Save_Result_As;
         private System.Windows.Forms.ToolStripMenuItem Element_Property;
         private System.Windows.Forms.ToolStripMenuItem Cycl_File_Format;
-        public static System.Windows.Forms.ProgressBar progressBar1;
+        public System.Windows.Forms.ProgressBar progressBar1;
     }
 }
 
