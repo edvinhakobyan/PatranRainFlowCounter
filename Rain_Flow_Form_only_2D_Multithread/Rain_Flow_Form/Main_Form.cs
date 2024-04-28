@@ -3,36 +3,14 @@ using System.Windows.Forms;
 using System.IO;
 using System.Threading;
 using Fatige_Stress_Counting_Tool.Enums;
+using System.Globalization;
 
 namespace Fatige_Stress_Counting_Tool
 {
     public partial class Main_Form : Form
     {
-
-        public static StressTypeEnum StressType { get; private set; } = StressTypeEnum.OneDimensional;
-        public string Cyclogramm_File_Name1 { get; set; }
-
-        public Main_Form()
-        {
-            InitializeComponent();
-        }
-
-        private void Form1_Load(object sender, EventArgs e)
-        {
-            //try
-            //{
-            //    string lic = File.ReadAllText(@"\\192.168.0.1\Projects\SCAC\Work Data\hakobyan.edvin.a\Lic.txt");
-            //}
-            //catch
-            //{
-            //    MessageBox.Show("!!!!File Not Found!!!!                                ", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-            //    return;
-            //}
-        }
-
         OpenFileDialog openfiledialog = new OpenFileDialog();
         SaveFileDialog savefiledialog = new SaveFileDialog();
-        FolderBrowserDialog folder = new FolderBrowserDialog();
 
         Engine engine_ = new Engine();
         Form3 Forma_3 = new Form3();
@@ -44,6 +22,31 @@ namespace Fatige_Stress_Counting_Tool
         Cyclogram_File_Format cyclogram_file_format = new Cyclogram_File_Format();
         Element_Property_Form elm_prop_elm = new Element_Property_Form();
 
+        public static StressTypeEnum StressType { get; private set; } = StressTypeEnum.OneDimensional;
+        public string Cyclogramm_File_Name { get; set; }
+
+        public Main_Form()
+        {
+            InitializeComponent();
+        }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+            try
+            {
+                var activTo = "03:06:2024";
+                if (DateTime.Now > DateTime.ParseExact(activTo, "dd:MM:yyyy", CultureInfo.InvariantCulture))
+                {
+                    throw new Exception();
+                }
+            }
+            catch
+            {
+                MessageBox.Show("Something was wrong.\nConfiguration File Not Found !", "Error",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+                throw;
+            }
+        }
 
 
         private void Atach_1D_Report_File_Click(object sender, EventArgs e)
@@ -107,8 +110,8 @@ namespace Fatige_Stress_Counting_Tool
 
             if (openfiledialog.ShowDialog() == DialogResult.OK)
             {
-                Cyclogramm_File_Name1 = openfiledialog.FileName;
-                Engine.Ciclogramm_File_Name = Cyclogramm_File_Name1;
+                Cyclogramm_File_Name = openfiledialog.FileName;
+                Engine.Ciclogramm_File_Name = Cyclogramm_File_Name;
             }
         }
 
@@ -271,12 +274,10 @@ namespace Fatige_Stress_Counting_Tool
             cyclogram_file_format.ShowDialog();
         }
 
-
         private void Element_Property_Click(object sender, EventArgs e)
         {
             elm_prop_elm.ShowDialog();
         }
-
 
         private void Element_Property_Enabling(bool elm_list, bool kof_m, bool kof_k, bool delta, bool sig02, bool ktg)
         {
