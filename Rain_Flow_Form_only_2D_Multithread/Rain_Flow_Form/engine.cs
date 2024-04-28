@@ -696,422 +696,19 @@ namespace Fatige_Stress_Counting_Tool
 
         static double Rain_flow_method(double[] x, double kof_m)
         {
-            double Sigma_equiv = 0;
-            int k0 = x.Length;
+            var result = CalculateRainFlow(x);
 
-            if (k0 < 3)
-                return Sigma_equiv;
+            var equiv = CalculateEquvalentStress(result, kof_m);
 
-            int k, m, n, Nk, i1_cur;
-            double x1_cur, x2_cur;
-            bool k_log = false;
-
-            Nk = k0 + 2;
-            Array.Resize(ref x, Nk);
-            for (int i = Nk - 2; i > 0; i--)
-            {
-                x[i] = x[i - 1];
-            }
-            x[0] = 0;
-
-            double[] xx = new double[Nk];
-            double[,] x_cyc = new double[Nk, 2];
-
-            if (x[1] - x[k0] != 0)
-            {
-                x[k0 + 1] = x[1];
-                k0++;
-            }
-
-
-            k = 0;
-            for (int i = 1; i <= k0; i++)
-            {
-                k++;
-                if (x[k + 1] != x[k])
-                {
-                    if (x[k + 1] > x[k])
-                        k_log = true;
-                    break;
-                }
-            }
-
-            if (k == k0)
-            {
-                return Sigma_equiv;
-            }
-            else
-            {
-                for (int i = k; i <= k0 - 1; i++)
-                {
-                    xx[i - (k - 1)] = x[i];
-                }
-
-                for (int i = 1; i <= k - 1; i++)
-                {
-                    xx[i + (k0 - k)] = x[i];
-                }
-            }
-            xx[k0] = xx[1];
-
-            m = 1;
-            x1_cur = xx[1];
-            x[m] = x1_cur;
-
-            for (int i = 2; i <= k0; i++)
-            {
-                x2_cur = xx[i];
-                if (k_log)
-                {
-                    if (x2_cur >= x1_cur)
-                    {
-                        x1_cur = x2_cur;
-                    }
-                    else
-                    {
-                        m++;
-                        x[m] = x1_cur;
-                        k_log = !k_log;
-                        x1_cur = x2_cur;
-                    }
-                }
-                else if (x2_cur <= x1_cur)
-                {
-                    x1_cur = x2_cur;
-                }
-                else
-                {
-                    m++;
-                    x[m] = x1_cur;
-
-                    k_log = !k_log;
-                    x1_cur = x2_cur;
-                }
-            }
-
-            if ((x[2] - x[1]) * (x[1] - x[m]) > 0)
-            {
-                for (int i = 2; i <= m; i++)
-                {
-                    x[i - 1] = x[i];
-                }
-                m--;
-            }
-
-            i1_cur = 1;
-            x1_cur = x[i1_cur];
-
-
-            for (int i = 1; i <= m; i++)
-            {
-                if (x[i] > x1_cur)
-                {
-                    i1_cur = i;
-                    x1_cur = x[i];
-                }
-            }
-
-
-            for (int i = i1_cur; i <= m; i++)
-            {
-                xx[i - i1_cur + 1] = x[i];
-            }
-            for (int i = 1; i <= i1_cur - 1; i++)
-            {
-                xx[i + m - i1_cur + 1] = x[i];
-            }
-            xx[m + 1] = xx[1];
-
-
-
-
-            int m_cur = 0;
-            //---------------------------------------------------------------------------------
-            k = 0;
-            n = 0;
-
-        stp1:
-            n++;
-            m_cur = m_cur + 1;
-            x[n] = xx[m_cur];
-
-        stp2:
-            if (n < 3) { goto stp1; }
-
-            x2_cur = Math.Abs(x[n] - x[n - 1]);
-            x1_cur = Math.Abs(x[n - 1] - x[n - 2]);
-
-            //stp3:
-            if (x2_cur < x1_cur) { goto stp1; }
-
-            //stp4: 
-            k++;
-            x_cyc[k, 0] = x[n - 2];
-            x_cyc[k, 1] = x[n - 1];
-
-            n -= 2;
-            x[n] = x[n + 2];
-
-            if (n == 1) { xx[m + 1] = x[1]; }
-
-            if (m_cur == m + 1 && n == 1) { goto stp5; }
-
-            goto stp2;
-
-        stp5:
-
-            //-------------------------------------------------------------------------------------
-
-            double xm;
-            for (int i = 1; i <= k; i++)
-            {
-                if (x_cyc[i, 1] > x_cyc[i, 0])
-                {
-                    xm = x_cyc[i, 0];
-                    x_cyc[i, 0] = x_cyc[i, 1];
-                    x_cyc[i, 1] = xm;
-                }
-            }
-
-
-            double Sigma_equiv_i = 0;
-            for (int i = 1; i <= k; i++)
-            {
-                switch (Stress_equation_Pr)
-                {
-                    case "cai": Sigma_equiv_i = Cai_Equation(x_cyc[i, 1], x_cyc[i, 0]); break;
-                    case "cai_new": Sigma_equiv_i = Cai_New_Equation(x_cyc[i, 1], x_cyc[i, 0], Sig_02, Ktg); break;
-                    case "walker": Sigma_equiv_i = Walker_Equation(x_cyc[i, 1], x_cyc[i, 0], Coef_a_walker_Pr, Coef_gama_walker_Pr); break;
-                    case "goodman": Sigma_equiv_i = Goodman_Equation(x_cyc[i, 1], x_cyc[i, 0], Gudman_ult_stress); break;
-                    case "soderberg": Sigma_equiv_i = Soderberg_Equation(x_cyc[i, 1], x_cyc[i, 0]); break;
-                    case "morro": Sigma_equiv_i = Morro_Equation(x_cyc[i, 1], x_cyc[i, 0]); break;
-                    case "gerber": Sigma_equiv_i = Gerber_Equation(x_cyc[i, 1], x_cyc[i, 0]); break;
-                    case "asme": Sigma_equiv_i = ASME_Elliptic_Equation(x_cyc[i, 1], x_cyc[i, 0]); break;
-                    case "swt": Sigma_equiv_i = Smith_Watson_Topper_Equation(x_cyc[i, 1], x_cyc[i, 0]); break;
-                    case "stulen": Sigma_equiv_i = Stulen_Equation(x_cyc[i, 1], x_cyc[i, 0]); break;
-                    case "topper": Sigma_equiv_i = Topper_Sandor_Equation(x_cyc[i, 1], x_cyc[i, 0]); break;
-                    default: MessageBox.Show("Stress Equation not selected"); return 0;
-                }
-
-                Sigma_equiv += Math.Pow(Sigma_equiv_i, kof_m);
-            }
-
-            Sigma_equiv = Math.Pow(Sigma_equiv, 1 / kof_m);
-
-            return Sigma_equiv;
+            return equiv;
         }
         static double Full_cycle_method(double[] x, double kof_m)
         {
+            var result = CalculateFullCycle(x);
 
-            double Sigma_equiv = 0;
-            int k0 = x.Length;
+            var equiv = CalculateEquvalentStress(result, kof_m);
 
-            if (k0 < 3)
-                return Sigma_equiv;
-
-            int k, m, Nk, i1_cur, i2_cur;
-            double x1_cur, x2_cur, a_cur;
-            bool k_log = false;
-
-            Nk = k0 + 2;
-            Array.Resize(ref x, Nk);
-            for (int i = Nk - 2; i > 0; i--)
-            {
-                x[i] = x[i - 1];
-            }
-            x[0] = 0;
-
-            double[] xx = new double[Nk];
-            double[,] x_cyc = new double[Nk, 2];
-
-            if (x[1] - x[k0] != 0)
-            {
-                x[k0 + 1] = x[1];
-                k0++;
-            }
-
-
-            k = 0;
-            for (int i = 1; i <= k0; i++)
-            {
-                k++;
-                if (x[k + 1] != x[k])
-                {
-                    if (x[k + 1] > x[k])
-                        k_log = true;
-                    break;
-                }
-            }
-
-            if (k == k0)
-            {
-                return Sigma_equiv;
-            }
-            else
-            {
-                for (int i = k; i <= k0 - 1; i++)
-                {
-                    xx[i - (k - 1)] = x[i];
-                }
-
-                for (int i = 1; i <= k - 1; i++)
-                {
-                    xx[i + (k0 - k)] = x[i];
-                }
-            }
-            xx[k0] = xx[1];
-
-            m = 1;
-            x1_cur = xx[1];
-            x[m] = x1_cur;
-
-            for (int i = 2; i <= k0; i++)
-            {
-                x2_cur = xx[i];
-                if (k_log)
-                {
-                    if (x2_cur >= x1_cur)
-                    {
-                        x1_cur = x2_cur;
-                    }
-                    else
-                    {
-                        m++;
-                        x[m] = x1_cur;
-
-                        k_log = !k_log;
-                        x1_cur = x2_cur;
-                    }
-                }
-                else if (x2_cur <= x1_cur)
-                {
-                    x1_cur = x2_cur;
-                }
-                else
-                {
-                    m++;
-                    x[m] = x1_cur;
-
-                    k_log = !k_log;
-                    x1_cur = x2_cur;
-                }
-            }
-
-            if ((x[2] - x[1]) * (x[1] - x[m]) > 0)
-            {
-                for (int i = 2; i <= m; i++)
-                {
-                    x[i - 1] = x[i];
-                }
-                m--;
-            }
-
-            i1_cur = 1;
-            x1_cur = x[i1_cur];
-
-
-            for (int i = 1; i <= m; i++)
-            {
-                if (x[i] > x1_cur)
-                {
-                    i1_cur = i;
-                    x1_cur = x[i];
-                }
-            }
-
-
-            for (int i = i1_cur; i <= m; i++)
-            {
-                xx[i - i1_cur + 1] = x[i];
-            }
-            for (int i = 1; i <= i1_cur - 1; i++)
-            {
-                xx[i + m - i1_cur + 1] = x[i];
-            }
-            xx[m + 1] = xx[1];
-
-
-
-            int m_cur = 0;
-
-            /*Rem full cycle method*/
-            //---------------------------------------------------------------------------------  
-
-            k = 0;
-            m_cur = m;
-            do
-            {
-                i1_cur = 1;
-                i2_cur = i1_cur + 1;
-                a_cur = Math.Abs(xx[i2_cur] - xx[i1_cur]);
-                for (int i = 1; i <= m_cur; i++)
-                {
-
-                    if (Math.Abs(xx[i + 1] - xx[i]) < a_cur)
-                    {
-                        i1_cur = i;
-                        i2_cur = i + 1;
-                        a_cur = Math.Abs(xx[i + 1] - xx[i]);
-                    }
-                }
-                k = k + 1;
-                x_cyc[k, 0] = xx[i1_cur];
-                x_cyc[k, 1] = xx[i2_cur];
-
-                for (int i = i1_cur; i <= (m_cur - 1); i++)
-                    xx[i] = xx[i + 2];
-
-                if (i1_cur == 1)
-                    xx[m_cur - 1] = xx[3];
-
-                if (i2_cur == m_cur)
-                    xx[1] = xx[m_cur + 1];
-
-                m_cur -= 2;
-            }
-            while (m_cur > 2);
-
-            k = k + 1;
-            x_cyc[k, 0] = xx[1];
-            x_cyc[k, 1] = xx[2];
-
-            //---------------------------------------------------------------------------------------
-            double xm;
-            for (int i = 1; i <= k; i++)
-            {
-                if (x_cyc[i, 1] > x_cyc[i, 0])
-                {
-                    xm = x_cyc[i, 0];
-                    x_cyc[i, 0] = x_cyc[i, 1];
-                    x_cyc[i, 1] = xm;
-                }
-            }
-
-
-            double Sigma_equiv_i = 0;
-            for (int i = 1; i <= k; i++)
-            {
-                switch (Stress_equation_Pr)
-                {
-                    case "cai": Sigma_equiv_i = Cai_Equation(x_cyc[i, 1], x_cyc[i, 0]); break;
-                    case "cai_new": Sigma_equiv_i = Cai_New_Equation(x_cyc[i, 1], x_cyc[i, 0], Sig_02, Ktg); break;
-                    case "walker": Sigma_equiv_i = Walker_Equation(x_cyc[i, 1], x_cyc[i, 0], Coef_a_walker_Pr, Coef_gama_walker_Pr); break;
-                    case "goodman": Sigma_equiv_i = Goodman_Equation(x_cyc[i, 1], x_cyc[i, 0], Gudman_ult_stress); break;
-                    case "soderberg": Sigma_equiv_i = Soderberg_Equation(x_cyc[i, 1], x_cyc[i, 0]); break;
-                    case "morro": Sigma_equiv_i = Morro_Equation(x_cyc[i, 1], x_cyc[i, 0]); break;
-                    case "gerber": Sigma_equiv_i = Gerber_Equation(x_cyc[i, 1], x_cyc[i, 0]); break;
-                    case "asme": Sigma_equiv_i = ASME_Elliptic_Equation(x_cyc[i, 1], x_cyc[i, 0]); break;
-                    case "swt": Sigma_equiv_i = Smith_Watson_Topper_Equation(x_cyc[i, 1], x_cyc[i, 0]); break;
-                    case "stulen": Sigma_equiv_i = Stulen_Equation(x_cyc[i, 1], x_cyc[i, 0]); break;
-                    case "topper": Sigma_equiv_i = Topper_Sandor_Equation(x_cyc[i, 1], x_cyc[i, 0]); break;
-                    default: MessageBox.Show("Stress Equation not selected"); return 0;
-                }
-                Sigma_equiv += Math.Pow(Sigma_equiv_i, kof_m);
-            }
-
-            Sigma_equiv = Math.Pow(Sigma_equiv, 1 / kof_m);
-
-            return Sigma_equiv;
+            return equiv;
         }
         static List<double[]> CalculateRainFlow(double[] rgn)
         {
@@ -1220,6 +817,144 @@ namespace Fatige_Stress_Counting_Tool
             if (m_cur == m + 1 && n == 0) goto stp5;
             goto stp2;
         stp5:
+
+
+            for (int i = 0; i < x_cyc.Count; i++)
+            {
+                if (x_cyc[i][0] > x_cyc[i][1])
+                {
+                    var temp = x_cyc[i][1];
+                    x_cyc[i][1] = x_cyc[i][0];
+                    x_cyc[i][0] = temp;
+                }
+            }
+
+            return x_cyc;
+        }
+        static List<double[]> CalculateFullCycle(double[] rgn)
+        {
+            int k0 = rgn.Length;
+            int k_tol = 8;
+
+            // Initialize arrays
+            var buff = new double[k0 + 1];
+            var xbuff = new double[k0 + 1];
+            var x_cyc = new List<double[]>();
+
+            // Initialize variables
+            double xa, xm, sig;
+            int kMaxVal = 0, s = 0;
+            bool k_log = false;
+
+            // Fill xbuff array
+            for (int i = 0; i < k0; i++)
+            {
+                xbuff[i] = Math.Round(rgn[i], k_tol);
+            }
+            xbuff[k0] = xbuff[0];
+
+            // If less than 3 data points, return 0
+            if (k0 < 3)
+            {
+                return x_cyc;
+            }
+
+            double maxVal = xbuff[0];
+
+            // Find maximum value and its index
+            for (int i = 1; i <= k0; i++)
+            {
+                if (xbuff[k0 - i + 1] != xbuff[k0 - i])
+                {
+                    k_log = xbuff[k0 - i + 1] > xbuff[k0 - i];
+                    s = 1;
+                    break;
+                }
+            }
+
+            // If all data points are same, return 0
+            if (s == 0)
+            {
+                return x_cyc;
+            }
+
+            // Process data points to find cycles
+            int j = -1;
+            for (int i = 0; i < k0; i++)
+            {
+                if (k_log && xbuff[i + 1] < xbuff[i])
+                {
+                    j++;
+                    k_log = !k_log;
+                    buff[j] = xbuff[i];
+
+                    // Update maximum value and its index
+                    if (buff[j] >= maxVal)
+                    {
+                        maxVal = buff[j];
+                        kMaxVal = j;
+                    }
+                }
+                else if (!k_log && xbuff[i + 1] > xbuff[i])
+                {
+                    j++;
+                    k_log = !k_log;
+                    buff[j] = xbuff[i];
+                }
+            }
+
+            // Rearrange data points to create cycles
+            int m = -1;
+            for (int i = kMaxVal; i <= j; i++)
+            {
+                m++;
+                xbuff[m] = buff[i];
+            }
+
+            for (int i = 0; i < kMaxVal; i++) //TODO
+            {
+                m++;
+                xbuff[m] = buff[i];
+            }
+            xbuff[m + 1] = xbuff[0];
+
+
+            /*Rem full cycle method*/
+            //---------------------------------------------------------------------------------  
+
+            //TODO
+            var m_cur = m;
+            do
+            {
+                var i1_cur = 1;
+                var i2_cur = i1_cur + 1;
+                var a_cur = Math.Abs(xbuff[i2_cur] - xbuff[i1_cur]);
+                for (int i = 1; i <= m_cur; i++)
+                {
+
+                    if (Math.Abs(xbuff[i + 1] - xbuff[i]) < a_cur)
+                    {
+                        i1_cur = i;
+                        i2_cur = i + 1;
+                        a_cur = Math.Abs(xbuff[i + 1] - xbuff[i]);
+                    }
+                }
+                x_cyc.Add(new double[] { xbuff[i1_cur], xbuff[i2_cur] });
+
+                for (int i = i1_cur; i <= (m_cur - 1); i++)
+                    xbuff[i] = xbuff[i + 2];
+
+                if (i1_cur == 1)
+                    xbuff[m_cur - 1] = xbuff[3];
+
+                if (i2_cur == m_cur)
+                    xbuff[1] = xbuff[m_cur + 1];
+
+                m_cur -= 2;
+            }
+            while (m_cur > 2);
+
+            x_cyc.Add(new double[] { xbuff[0], xbuff[1] });
 
 
             for (int i = 0; i < x_cyc.Count; i++)
