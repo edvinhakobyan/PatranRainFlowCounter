@@ -693,8 +693,8 @@ namespace Fatige_Stress_Counting_Tool
 
         static List<double[]> CalculateRainFlow(double[] rgn)
         {
-            int k0 = rgn.Length;
             int k_tol = 8;
+            int k0 = rgn.Length;
 
             // Initialize arrays
             var buff = new double[k0 + 1];
@@ -702,7 +702,6 @@ namespace Fatige_Stress_Counting_Tool
             var x_cyc = new List<double[]>();
 
             // Initialize variables
-            double xa, xm, sig;
             int kMaxVal = 0, s = 0;
             bool k_log = false;
 
@@ -789,7 +788,7 @@ namespace Fatige_Stress_Counting_Tool
             double x1_cur = Math.Abs(buff[n - 1] - buff[n - 2]);
         stp3:
             if (x2_cur < x1_cur) goto stp1;
-            stp4:
+        stp4:
             x_cyc.Add(new double[] { buff[n - 2], buff[n - 1] });
 
             n -= 2;
@@ -798,7 +797,6 @@ namespace Fatige_Stress_Counting_Tool
             if (m_cur == m + 1 && n == 0) goto stp5;
             goto stp2;
         stp5:
-
 
             for (int i = 0; i < x_cyc.Count; i++)
             {
