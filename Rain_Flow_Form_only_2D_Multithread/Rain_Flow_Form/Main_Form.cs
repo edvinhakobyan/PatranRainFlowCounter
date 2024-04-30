@@ -28,7 +28,6 @@ namespace Fatige_Stress_Counting_Tool
         public Main_Form()
         {
             InitializeComponent();
-            richTextBox1.Rtf = Properties.Resources.Cai;
         }
 
         private void Form1_Load(object sender, EventArgs e)
