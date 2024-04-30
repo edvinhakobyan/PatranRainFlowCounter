@@ -211,9 +211,9 @@
     </Compile>
     <None Include="Resources\ASME_Elliptic.rtf" />
     <None Include="Resources\Cai.rtf" />
+    <None Include="Resources\Cai_New.rtf" />
     <None Include="Resources\Gerber.rtf" />
     <None Include="Resources\Goodman.rtf" />
-    <None Include="Resources\Goodman_equation.rtf" />
     <None Include="Resources\Morrow.rtf" />
     <None Include="Resources\Smith_Watson_Topper.rtf" />
     <None Include="Resources\Soderberg.rtf" />
@@ -228,7 +228,6 @@
   <ItemGroup>
     <Content Include="001.ico" />
     <None Include="Resources\pictureBox1.Image.bmp" />
-    <None Include="Resources\TextFile1.txt" />
     <None Include="Resources\Walker__pic.bmp" />
     <None Include="Resources\Walker_pic.bmp" />
     <None Include="Resources\Topper_Sandor_pic.bmp" />
@@ -240,7 +239,6 @@
     <None Include="Resources\Gerber_pic.bmp" />
     <None Include="Resources\Cai_pic.bmp" />
     <None Include="Resources\ASME_Elliptic_pic.bmp" />
-    <None Include="Resources\Gudman.bmp" />
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Service References\" />
