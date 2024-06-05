@@ -709,7 +709,7 @@ namespace Fatige_Stress_Counting_Tool
 
             Create_templit_2D_critical(Templet_File_Name);
 
-            equivalent_stress_file.WriteLine("Fatigue Stress:" + Environment.NewLine + "4" + Environment.NewLine +
+            equivalent_stress_file.WriteLine("Fatigue Stress:" + Environment.NewLine + "9" + Environment.NewLine +
                                                   "SUBTITLE 1" + Environment.NewLine + "SUBTITLE 2");
             Console.WriteLine("Start Solving....");
             var time = DateTime.Now;
@@ -767,7 +767,8 @@ namespace Fatige_Stress_Counting_Tool
                             var maxEqvZ1 = 0.0;
                             var maxEqvAngleZ1 = 0.0;
 
-                            for (int ii = 0; ii < anglesZ1.Count(); ii++)
+
+                            Parallel.ForEach(anglesZ1, (angle) =>
                             {
                                 double[] stresses_cycle = new double[cycl_matrix.GetLength(0)];
 
@@ -788,18 +789,20 @@ namespace Fatige_Stress_Counting_Tool
                                         }
                                     }
 
-                                    stressForRF.Add(Sigma_alfa_2D(stress_component[0], stress_component[1], stress_component[2], anglesZ1[ii]));
+                                    stressForRF.Add(Sigma_alfa_2D(stress_component[0], stress_component[1], stress_component[2], angle));
                                 };
 
                                 var eqv = Rain_flow_method(stressForRF.ToArray(), Cof_m);
 
-                                if(eqv > maxEqvZ1)
+                                lock (this)
                                 {
-                                    maxEqvZ1 = eqv;
-                                    maxEqvAngleZ1 = anglesZ1[ii];
+                                    if (eqv > maxEqvZ1)
+                                    {
+                                        maxEqvZ1 = eqv;
+                                        maxEqvAngleZ1 = angle;
+                                    }
                                 }
-
-                            }
+                            });
 
                             stressToFile.Add(maxEqvZ1 * Math.Cos(maxEqvAngleZ1)); //maxEqvZ1-x component
                             stressToFile.Add(maxEqvZ1 * Math.Sin(maxEqvAngleZ1)); //maxEqvZ1-y component
@@ -811,7 +814,7 @@ namespace Fatige_Stress_Counting_Tool
                             var maxEqvZ0 = 0.0;
                             var maxEqvAngleZ0 = 0.0;
 
-                            for (int ii = 0; ii < anglesZ0.Count(); ii++)
+                            Parallel.ForEach(anglesZ0, (angle) =>
                             {
                                 double[] stresses_cycle = new double[cycl_matrix.GetLength(0)];
 
@@ -832,18 +835,20 @@ namespace Fatige_Stress_Counting_Tool
                                         }
                                     }
 
-                                    stressForRF.Add(Sigma_alfa_2D(stress_component[0], stress_component[1], stress_component[2], anglesZ0[ii]));
+                                    stressForRF.Add(Sigma_alfa_2D(stress_component[0], stress_component[1], stress_component[2], angle));
                                 };
 
                                 var eqv = Rain_flow_method(stressForRF.ToArray(), Cof_m);
 
-                                if (eqv > maxEqvZ0)
+                                lock (this)
                                 {
-                                    maxEqvZ0 = eqv;
-                                    maxEqvAngleZ0 = anglesZ0[ii];
+                                    if (eqv > maxEqvZ0)
+                                    {
+                                        maxEqvZ0 = eqv;
+                                        maxEqvAngleZ0 = angle;
+                                    }
                                 }
-
-                            }
+                            });
 
                             stressToFile.Add(maxEqvZ0 * Math.Cos(maxEqvAngleZ0)); //maxEqvZ0-x component
                             stressToFile.Add(maxEqvZ0 * Math.Sin(maxEqvAngleZ0)); //maxEqvZ0-y component
@@ -854,7 +859,7 @@ namespace Fatige_Stress_Counting_Tool
                             var maxEqvZ2 = 0.0;
                             var maxEqvAngleZ2 = 0.0;
 
-                            for (int ii = 0; ii < anglesZ2.Count(); ii++)
+                            Parallel.ForEach(anglesZ2, (angle) =>
                             {
                                 double[] stresses_cycle = new double[cycl_matrix.GetLength(0)];
 
@@ -875,17 +880,20 @@ namespace Fatige_Stress_Counting_Tool
                                         }
                                     }
 
-                                    stressForRF.Add(Sigma_alfa_2D(stress_component[0], stress_component[1], stress_component[2], anglesZ2[ii]));
+                                    stressForRF.Add(Sigma_alfa_2D(stress_component[0], stress_component[1], stress_component[2], angle));
                                 };
 
                                 var eqv = Rain_flow_method(stressForRF.ToArray(), Cof_m);
 
-                                if (eqv > maxEqvZ2)
+                                lock (this)
                                 {
-                                    maxEqvZ2 = eqv;
-                                    maxEqvAngleZ2 = anglesZ2[ii];
+                                    if (eqv > maxEqvZ2)
+                                    {
+                                        maxEqvZ2 = eqv;
+                                        maxEqvAngleZ2 = angle;
+                                    }
                                 }
-                            }
+                            });
 
                             stressToFile.Add(maxEqvZ2 * Math.Cos(maxEqvAngleZ2)); //maxEqvZ2-x component
                             stressToFile.Add(maxEqvZ2 * Math.Sin(maxEqvAngleZ2)); //maxEqvZ2-y component
@@ -906,8 +914,8 @@ namespace Fatige_Stress_Counting_Tool
                 equivalent_stress_file.WriteLine(outtext);
 
 
-                //if (ConsoleShow)
-                //    Console.WriteLine(outtext);
+                if (ConsoleShow)
+                    Console.WriteLine(outtext);
 
 
                 if (i % (Element_Count / 100) == 0 || i == Element_Count - 1)
@@ -1427,9 +1435,9 @@ namespace Fatige_Stress_Counting_Tool
                     return_str.AppendLine();
 
                 if (a[i] < 0)
-                    return_str.AppendFormat("{0:.0000000E+00}", a[i]);
+                    return_str.AppendFormat("{0:0.000000E+00}", a[i]);
                 else
-                    return_str.AppendFormat("{0: .0000000E+00}", a[i]);
+                    return_str.AppendFormat("{0:0.0000000E+00}", a[i]);
 
             }
             return return_str.ToString();
