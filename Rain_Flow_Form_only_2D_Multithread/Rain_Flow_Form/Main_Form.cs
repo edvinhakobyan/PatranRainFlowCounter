@@ -5,6 +5,7 @@ using System.Threading;
 using Fatige_Stress_Counting_Tool.Enums;
 using System.Globalization;
 
+
 namespace Fatige_Stress_Counting_Tool
 {
     public partial class Main_Form : Form
@@ -32,20 +33,20 @@ namespace Fatige_Stress_Counting_Tool
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            try
-            {
-                var activTo = "03:06:2024";
-                if (DateTime.Now > DateTime.ParseExact(activTo, "dd:MM:yyyy", CultureInfo.InvariantCulture))
-                {
-                    throw new Exception();
-                }
-            }
-            catch
-            {
-                MessageBox.Show("Something was wrong.\nConfiguration File Not Found !", "Error",
-                    MessageBoxButtons.OK, MessageBoxIcon.Error);
-                throw;
-            }
+            //try
+            //{
+            //    var activTo = "03:06:2024";
+            //    if (DateTime.Now > DateTime.ParseExact(activTo, "dd:MM:yyyy", CultureInfo.InvariantCulture))
+            //    {
+            //        throw new Exception();
+            //    }
+            //}
+            //catch
+            //{
+            //    MessageBox.Show("Something was wrong.\nConfiguration File Not Found !", "Error",
+            //        MessageBoxButtons.OK, MessageBoxIcon.Error);
+            //    throw;
+            //}
         }
 
 
@@ -143,6 +144,7 @@ namespace Fatige_Stress_Counting_Tool
 
         private void Run_Click(object sender, EventArgs e)
         {
+
 
             Engine.ConsoleShow = Show_Consol.Checked;
 

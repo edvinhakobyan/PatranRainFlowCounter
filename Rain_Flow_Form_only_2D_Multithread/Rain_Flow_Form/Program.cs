@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Collections;
 using System.Windows.Forms;
-using RFC;
 
 namespace Fatige_Stress_Counting_Tool
 {

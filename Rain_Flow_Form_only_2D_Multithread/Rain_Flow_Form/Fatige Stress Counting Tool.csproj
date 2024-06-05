@@ -76,6 +76,7 @@
     <Compile Include="Cai_equation_Form.Designer.cs">
       <DependentUpon>Cai_equation_Form.cs</DependentUpon>
     </Compile>
+    <Compile Include="Engine - Copy.cs" />
     <Compile Include="Engine.cs" />
     <Compile Include="Cyclogram File Format.cs">
       <SubType>Form</SubType>
@@ -242,12 +243,6 @@
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Service References\" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\RFC\RFC.vbproj">
-      <Project>{517C5C47-9087-41B9-B249-BB261A7682AC}</Project>
-      <Name>RFC</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -86,7 +86,6 @@
         Next
         xbuff(m + 1) = xbuff(1)
 
-
         k = 0
         m_cur = 0
         n = 0

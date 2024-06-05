@@ -10,7 +10,7 @@ using Fatige_Stress_Counting_Tool.Enums;
 
 namespace Fatige_Stress_Counting_Tool
 {
-    public class Engine
+    public class Engine1
     {
         static double Cof_k;
         static double Cof_m;
@@ -366,7 +366,7 @@ namespace Fatige_Stress_Counting_Tool
             File.Delete(Temporary_File_Name);
             Console.WriteLine("\nEnd Solving.\nElapsed Time " + (DateTime.Now - time));
         }
-        public void Engine_for_2D_critical_plane_(object pBar)
+        public void Engine_for_2D_critical_plane(object pBar)
         {
             var progressBar = pBar as ProgressBar;
 
@@ -618,314 +618,6 @@ namespace Fatige_Stress_Counting_Tool
             File.Delete(Temporary_File_Name);
             Console.WriteLine("\nEnd Solving.\nElapsed Time " + (DateTime.Now - time));
         }
-        public void Engine_for_2D_critical_plane(object pBar)
-        {
-            var progressBar = pBar as ProgressBar;
-
-            #region Reading Cyclograms File !!!
-            Console.WriteLine("Reading Cyclograms File !!!");
-
-            int Cycle_Line_count = 0;
-            int Cycle_Column_count = 0;
-
-            double[,] cycl_matrix = Read_cyclograms(ref Cycle_Line_count, ref Cycle_Column_count);
-
-            if (cycl_matrix == null)
-            {
-                MessageBox.Show("Cyclograms File Is Incorrect..." + new string(' ', 50), "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
-            }
-
-            Console.WriteLine("Cyclograms File Read Successfully !!!");
-            #endregion
-
-            #region Reading Patran Report File !!!
-            Console.WriteLine("Reading Patran Report File !!!");
-
-            int Load_Case_Count = 0;
-            int Element_Count = 0;
-            int tox_byate_lengt = 0;
-
-
-            if (!Create_Temporary_Result_File(ref Load_Case_Count, ref Element_Count, ref tox_byate_lengt, 4))
-            {
-                MessageBox.Show("Report File is incorrect..." + new string(' ', 50), "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
-            }
-
-
-            Console.WriteLine("Patran Report File Read Successfully !!!");
-            #endregion
-
-            #region IF Cycle_Column_count == Load_Case_Count
-            if (Cycle_Column_count != Load_Case_Count)
-            {
-                MessageBox.Show("The Number of Load Cases is Not Equal to The Number of Cyclograms!", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
-            }
-            #endregion
-
-            #region Element_Property_Check
-            Console.WriteLine("Property check started !!!");
-
-            BinaryReader element_id_from_report = new BinaryReader(File.OpenRead(Temporary_File_Name));
-            List<int> error_list = new List<int>();
-
-            int id;
-            for (int i = 0; i < 32 * Element_Count; i += 32)
-            {
-                element_id_from_report.BaseStream.Position = i;
-                id = (int)element_id_from_report.ReadInt64();
-
-                if (!Elm_prop.ContainsKey(id))
-                    error_list.Add(id);
-            }
-            element_id_from_report.Close();
-
-
-            if (error_list.Count != 0)
-            {
-                string path = Temporary_File_Name.Substring(0, Temporary_File_Name.IndexOf(".txt")) + "_Error_List.txt";
-                StreamWriter Error_List_Stream = new StreamWriter(path);
-
-                foreach (int elmid in error_list)
-                    Error_List_Stream.Write(elmid + " ");
-
-                Error_List_Stream.Close();
-
-                MessageBox.Show("Elements in Error_List.txt" + "Has No Properties", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
-            }
-
-            Console.WriteLine("Property check ended !!!");
-            #endregion
-
-            MessageBox.Show(string.Format("Number Of Point In Ciclograms = {0}\nNumber Of Load Cases = {1}\nNumber Of Elements = {2}", Cycle_Line_count, Load_Case_Count, Element_Count));
-
-            BinaryReader read = new BinaryReader(File.Open(Temporary_File_Name, FileMode.Open));
-
-            StreamWriter equivalent_stress_file = new StreamWriter(Result_File_Name);
-
-
-            Create_templit_2D_critical(Templet_File_Name);
-
-            equivalent_stress_file.WriteLine("Fatigue Stress:" + Environment.NewLine + "4" + Environment.NewLine +
-                                                  "SUBTITLE 1" + Environment.NewLine + "SUBTITLE 2");
-            Console.WriteLine("Start Solving....");
-            var time = DateTime.Now;
-            double[,] z0_stress = new double[Load_Case_Count, 3];
-            double[,] z1_stress = new double[Load_Case_Count, 3];
-            double[,] z2_stress = new double[Load_Case_Count, 3];
-
-
-            for (int i = 0; i < Element_Count; i++)
-            {
-                read.BaseStream.Position = i * 32;
-
-                int Element_id = (int)read.ReadInt64();
-
-                Cof_m = Elm_prop[Element_id][0];
-                Cof_k = Elm_prop[Element_id][1];
-                Sig_02 = Elm_prop[Element_id][2];
-                Ktg = Elm_prop[Element_id][3];
-
-                #region Get LC x StressCompon matrix
-                for (int j = 0; j < Load_Case_Count; j++)
-                {
-                    for (int k = 1; k < 4; k++) //0-n elementi hamarn a, 0-X,1-Y,2-XY
-                    {
-                        read.BaseStream.Position = (2 * j * Element_Count + i) * 32 + k * 8; // (+8*k) araji long@ic heto ekox@
-                        double temp1 = read.ReadDouble();
-
-                        read.BaseStream.Position = (2 * j * Element_Count + i + Element_Count) * 32 + k * 8;
-                        double temp2 = read.ReadDouble();
-
-                        if (k == 1 || k == 2)
-                        {
-                            z0_stress[j, k - 1] = (temp1 + temp2) / 2;
-                            z1_stress[j, k - 1] = z0_stress[j, k - 1] + Cof_k * (temp1 - temp2) / 2;
-                            z2_stress[j, k - 1] = z0_stress[j, k - 1] + Cof_k * (temp2 - temp1) / 2;
-                        }
-                        else // es el qez zdvig@ axper jan
-                        {
-                            z0_stress[j, k - 1] = (temp1 + temp2) / 2;
-                            z1_stress[j, k - 1] = z0_stress[j, k - 1] + (temp1 - temp2) / 2;
-                            z2_stress[j, k - 1] = z0_stress[j, k - 1] + (temp2 - temp1) / 2;
-                        }
-                    }
-                }
-                #endregion
-
-
-                var stressToFile = new List<double>();
-                switch (Cycle_method)
-                {
-                    case CycleCountingAlgoritm.RainFlow:
-                        {
-                            var anglesZ1 = Multiaxial_stress_cycle_2D(cycl_matrix, z1_stress).Distinct().ToArray();
-
-                            var maxEqvZ1 = 0.0;
-                            var maxEqvAngleZ1 = 0.0;
-
-                            for (int ii = 0; ii < anglesZ1.Count(); ii++)
-                            {
-                                double[] stresses_cycle = new double[cycl_matrix.GetLength(0)];
-
-                                int a_rows = cycl_matrix.GetLength(0);
-                                int a_cols = cycl_matrix.GetLength(1);
-                                int b_cols = z1_stress.GetLength(1);
-
-                                var stressForRF = new List<double>();
-                                for (int r = 0; r < a_rows; r++)
-                                {
-                                    double[] stress_component = new double[b_cols]; // b_cols - stress component count
-
-                                    for (int j = 0; j < b_cols; j++)
-                                    {
-                                        for (int k = 0; k < a_cols; k++)
-                                        {
-                                            stress_component[j] += cycl_matrix[r, k] * z1_stress[k, j];
-                                        }
-                                    }
-
-                                    stressForRF.Add(Sigma_alfa_2D(stress_component[0], stress_component[1], stress_component[2], anglesZ1[ii]));
-                                };
-
-                                var eqv = Rain_flow_method(stressForRF.ToArray(), Cof_m);
-
-                                if(eqv > maxEqvZ1)
-                                {
-                                    maxEqvZ1 = eqv;
-                                    maxEqvAngleZ1 = anglesZ1[ii];
-                                }
-
-                            }
-
-                            stressToFile.Add(maxEqvZ1 * Math.Cos(maxEqvAngleZ1)); //maxEqvZ1-x component
-                            stressToFile.Add(maxEqvZ1 * Math.Sin(maxEqvAngleZ1)); //maxEqvZ1-y component
-                            stressToFile.Add(0.0);                                //maxEqvZ1-z component
-
-
-                            var anglesZ0 = Multiaxial_stress_cycle_2D(cycl_matrix, z0_stress).Distinct().ToArray();
-
-                            var maxEqvZ0 = 0.0;
-                            var maxEqvAngleZ0 = 0.0;
-
-                            for (int ii = 0; ii < anglesZ0.Count(); ii++)
-                            {
-                                double[] stresses_cycle = new double[cycl_matrix.GetLength(0)];
-
-                                int a_rows = cycl_matrix.GetLength(0);
-                                int a_cols = cycl_matrix.GetLength(1);
-                                int b_cols = z0_stress.GetLength(1);
-
-                                var stressForRF = new List<double>();
-                                for (int r = 0; r < a_rows; r++)
-                                {
-                                    double[] stress_component = new double[b_cols]; // b_cols - stress component count
-
-                                    for (int j = 0; j < b_cols; j++)
-                                    {
-                                        for (int k = 0; k < a_cols; k++)
-                                        {
-                                            stress_component[j] += cycl_matrix[r, k] * z0_stress[k, j];
-                                        }
-                                    }
-
-                                    stressForRF.Add(Sigma_alfa_2D(stress_component[0], stress_component[1], stress_component[2], anglesZ0[ii]));
-                                };
-
-                                var eqv = Rain_flow_method(stressForRF.ToArray(), Cof_m);
-
-                                if (eqv > maxEqvZ0)
-                                {
-                                    maxEqvZ0 = eqv;
-                                    maxEqvAngleZ0 = anglesZ0[ii];
-                                }
-
-                            }
-
-                            stressToFile.Add(maxEqvZ0 * Math.Cos(maxEqvAngleZ0)); //maxEqvZ0-x component
-                            stressToFile.Add(maxEqvZ0 * Math.Sin(maxEqvAngleZ0)); //maxEqvZ0-y component
-                            stressToFile.Add(0.0);                                //maxEqvZ0-z component
-
-                            var anglesZ2 = Multiaxial_stress_cycle_2D(cycl_matrix, z2_stress).Distinct().ToArray();
-
-                            var maxEqvZ2 = 0.0;
-                            var maxEqvAngleZ2 = 0.0;
-
-                            for (int ii = 0; ii < anglesZ2.Count(); ii++)
-                            {
-                                double[] stresses_cycle = new double[cycl_matrix.GetLength(0)];
-
-                                int a_rows = cycl_matrix.GetLength(0);
-                                int a_cols = cycl_matrix.GetLength(1);
-                                int b_cols = z2_stress.GetLength(1);
-
-                                var stressForRF = new List<double>();
-                                for (int r = 0; r < a_rows; r++)
-                                {
-                                    double[] stress_component = new double[b_cols]; // b_cols - stress component count
-
-                                    for (int j = 0; j < b_cols; j++)
-                                    {
-                                        for (int k = 0; k < a_cols; k++)
-                                        {
-                                            stress_component[j] += cycl_matrix[r, k] * z2_stress[k, j];
-                                        }
-                                    }
-
-                                    stressForRF.Add(Sigma_alfa_2D(stress_component[0], stress_component[1], stress_component[2], anglesZ2[ii]));
-                                };
-
-                                var eqv = Rain_flow_method(stressForRF.ToArray(), Cof_m);
-
-                                if (eqv > maxEqvZ2)
-                                {
-                                    maxEqvZ2 = eqv;
-                                    maxEqvAngleZ2 = anglesZ2[ii];
-                                }
-                            }
-
-                            stressToFile.Add(maxEqvZ2 * Math.Cos(maxEqvAngleZ2)); //maxEqvZ2-x component
-                            stressToFile.Add(maxEqvZ2 * Math.Sin(maxEqvAngleZ2)); //maxEqvZ2-y component
-                            stressToFile.Add(0.0);                                //maxEqvZ2-z component
-                        }
-                        break;
-                    case CycleCountingAlgoritm.FullCycle:
-                        {
-
-                        }
-                        break;
-
-                    default: MessageBox.Show("Select Cycle Counting Method"); return;
-                }
-
-
-                string outtext = Element_id + Environment.NewLine + Exponent_String_Format(stressToFile.ToArray());
-                equivalent_stress_file.WriteLine(outtext);
-
-
-                //if (ConsoleShow)
-                //    Console.WriteLine(outtext);
-
-
-                if (i % (Element_Count / 100) == 0 || i == Element_Count - 1)
-                {
-                    var percent = (int)(100 * (1.0 * i / (Element_Count - 1)));
-                    Console.Title = $"Completed {percent}%";
-                    progressBar.Invoke(new Action(() =>
-                    {
-                        progressBar.Value = percent;
-                    }));
-                }
-            }
-
-            equivalent_stress_file.Close();
-            read.Close();
-            File.Delete(Temporary_File_Name);
-            Console.WriteLine("\nEnd Solving.\nElapsed Time " + (DateTime.Now - time));
-        }
 
 
         static double[] Oneaxial_stress_cycle(double[,] a, double[] b)
@@ -951,19 +643,19 @@ namespace Fatige_Stress_Counting_Tool
 
             double[] stress_in_alfa_plane = new double[b_rows];
 
-            for (int i = 0; i < b_rows; i++) //Lc-es
+            for (int i = 0; i < b_rows; i++)
             {
                 stress_in_alfa_plane[i] = Sigma_alfa_2D(b[i, 0], b[i, 1], b[i, 2], alfa);
             }
             return stress_in_alfa_plane;
         }
-        static double[] Multiaxial_stress_cycle_2D(double[,] cyclagram, double[,] lcStrComp)
+        static double[] Multiaxial_stress_cycle_2D(double[,] a, double[,] b)
         {
-            double[] stresses_cycle = new double[cyclagram.GetLength(0)];
+            double[] stresses_cycle = new double[a.GetLength(0)];
 
-            int a_rows = cyclagram.GetLength(0);
-            int a_cols = cyclagram.GetLength(1);
-            int b_cols = lcStrComp.GetLength(1);
+            int a_rows = a.GetLength(0);
+            int a_cols = a.GetLength(1);
+            int b_cols = b.GetLength(1);
 
             Parallel.For(0, a_rows, i =>
             {
@@ -973,7 +665,7 @@ namespace Fatige_Stress_Counting_Tool
                 {
                     for (int k = 0; k < a_cols; k++)
                     {
-                        stress_component[j] += cyclagram[i, k] * lcStrComp[k, j];
+                        stress_component[j] += a[i, k] * b[k, j];
                     }
                 }
 
@@ -991,9 +683,6 @@ namespace Fatige_Stress_Counting_Tool
                     case StressCalculationTypeEnum.EquivalentVonMisesStress2D:
                         stresses_cycle[i] = Equivalent_von_mises_stress(stress_component[0], stress_component[1], stress_component[2]);
                         break;
-                    case StressCalculationTypeEnum.CriticalPlane: //Return angles
-                        stresses_cycle[i] = 0.5 * Math.Atan(2.0 * stress_component[2] / (stress_component[0] - stress_component[1]));
-                        break;
                     default: MessageBox.Show("Select one of 2D methods"); break;
                 }
             });
@@ -1002,7 +691,7 @@ namespace Fatige_Stress_Counting_Tool
         }
 
 
-        public static List<double[]> CalculateRainFlow(double[] rgn)
+        static List<double[]> CalculateRainFlow(double[] rgn)
         {
             int k_tol = 8;
             int k0 = rgn.Length;
@@ -1099,7 +788,7 @@ namespace Fatige_Stress_Counting_Tool
             double x1_cur = Math.Abs(buff[n - 1] - buff[n - 2]);
         stp3:
             if (x2_cur < x1_cur) goto stp1;
-            stp4:
+        stp4:
             x_cyc.Add(new double[] { buff[n - 2], buff[n - 1] });
 
             n -= 2;
@@ -1121,7 +810,7 @@ namespace Fatige_Stress_Counting_Tool
 
             return x_cyc;
         }
-        public static List<double[]> CalculateFullCycle(double[] rgn)
+        static List<double[]> CalculateFullCycle(double[] rgn)
         {
             int k0 = rgn.Length;
             int k_tol = 8;
@@ -1208,36 +897,37 @@ namespace Fatige_Stress_Counting_Tool
             }
             xbuff[m + 1] = xbuff[0];
 
+
             /*Rem full cycle method*/
             //---------------------------------------------------------------------------------  
 
             //TODO
-            var m_cur = rgn.Length % 2 == 0 ? m + 1 : m;
+            var m_cur = m;
             do
             {
-                var i1_cur = 0;
+                var i1_cur = 1;
                 var i2_cur = i1_cur + 1;
                 var a_cur = Math.Abs(xbuff[i2_cur] - xbuff[i1_cur]);
                 for (int i = 1; i <= m_cur; i++)
                 {
-                    var a_cur_tem = Math.Abs(xbuff[i + 1] - xbuff[i]);
-                    if (a_cur_tem < a_cur)
+
+                    if (Math.Abs(xbuff[i + 1] - xbuff[i]) < a_cur)
                     {
                         i1_cur = i;
                         i2_cur = i + 1;
-                        a_cur = a_cur_tem;
+                        a_cur = Math.Abs(xbuff[i + 1] - xbuff[i]);
                     }
                 }
                 x_cyc.Add(new double[] { xbuff[i1_cur], xbuff[i2_cur] });
 
-                for (int i = i1_cur; i <= m_cur; i++)
+                for (int i = i1_cur; i <= (m_cur - 1); i++)
                     xbuff[i] = xbuff[i + 2];
 
-                if (i1_cur == 0)
-                    xbuff[m_cur - 1] = xbuff[2];
+                if (i1_cur == 1)
+                    xbuff[m_cur - 1] = xbuff[3];
 
                 if (i2_cur == m_cur)
-                    xbuff[0] = xbuff[m_cur + 1];
+                    xbuff[1] = xbuff[m_cur + 1];
 
                 m_cur -= 2;
             }
