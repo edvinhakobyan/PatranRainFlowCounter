@@ -7,5 +7,6 @@
         MaxPrincipal2D = 2,
         EquivalentVonMisesStress2D = 3,
         CriticalPlane = 4,
+        CyclogramCriticalPlane = 5,
     }
 }

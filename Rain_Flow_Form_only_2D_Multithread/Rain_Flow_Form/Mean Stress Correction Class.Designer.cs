@@ -157,12 +157,14 @@
             // radioButton1
             // 
             this.radioButton1.AutoSize = true;
+            this.radioButton1.Checked = true;
             this.radioButton1.Location = new System.Drawing.Point(240, 20);
             this.radioButton1.Name = "radioButton1";
             this.radioButton1.Size = new System.Drawing.Size(14, 13);
             this.radioButton1.TabIndex = 5;
+            this.radioButton1.TabStop = true;
             this.radioButton1.UseVisualStyleBackColor = true;
-            this.radioButton1.CheckedChanged += new System.EventHandler(this.RadioButton1_CheckedChanged);
+            this.radioButton1.Click += new System.EventHandler(this.RadioButton1_Click);
             // 
             // radioButton2
             // 
@@ -172,7 +174,7 @@
             this.radioButton2.Size = new System.Drawing.Size(14, 13);
             this.radioButton2.TabIndex = 5;
             this.radioButton2.UseVisualStyleBackColor = true;
-            this.radioButton2.CheckedChanged += new System.EventHandler(this.RadioButton2_CheckedChanged);
+            this.radioButton2.Click += new System.EventHandler(this.RadioButton2_Click);
             // 
             // radioButton3
             // 
@@ -182,7 +184,7 @@
             this.radioButton3.Size = new System.Drawing.Size(14, 13);
             this.radioButton3.TabIndex = 5;
             this.radioButton3.UseVisualStyleBackColor = true;
-            this.radioButton3.CheckedChanged += new System.EventHandler(this.RadioButton3_CheckedChanged);
+            this.radioButton3.Click += new System.EventHandler(this.RadioButton3_Click);
             // 
             // radioButton4
             // 
@@ -193,7 +195,7 @@
             this.radioButton4.Size = new System.Drawing.Size(14, 13);
             this.radioButton4.TabIndex = 5;
             this.radioButton4.UseVisualStyleBackColor = true;
-            this.radioButton4.CheckedChanged += new System.EventHandler(this.RadioButton4_CheckedChanged);
+            this.radioButton4.Click += new System.EventHandler(this.RadioButton4_Click);
             // 
             // radioButton5
             // 
@@ -204,7 +206,7 @@
             this.radioButton5.Size = new System.Drawing.Size(14, 13);
             this.radioButton5.TabIndex = 5;
             this.radioButton5.UseVisualStyleBackColor = true;
-            this.radioButton5.CheckedChanged += new System.EventHandler(this.RadioButton5_CheckedChanged);
+            this.radioButton5.Click += new System.EventHandler(this.RadioButton5_Click);
             // 
             // radioButton6
             // 
@@ -215,7 +217,7 @@
             this.radioButton6.Size = new System.Drawing.Size(14, 13);
             this.radioButton6.TabIndex = 5;
             this.radioButton6.UseVisualStyleBackColor = true;
-            this.radioButton6.CheckedChanged += new System.EventHandler(this.RadioButton6_CheckedChanged);
+            this.radioButton6.Click += new System.EventHandler(this.RadioButton6_Click);
             // 
             // radioButton7
             // 
@@ -226,7 +228,7 @@
             this.radioButton7.Size = new System.Drawing.Size(14, 13);
             this.radioButton7.TabIndex = 5;
             this.radioButton7.UseVisualStyleBackColor = true;
-            this.radioButton7.CheckedChanged += new System.EventHandler(this.RadioButton7_CheckedChanged);
+            this.radioButton7.Click += new System.EventHandler(this.RadioButton7_Click);
             // 
             // radioButton8
             // 
@@ -237,7 +239,7 @@
             this.radioButton8.Size = new System.Drawing.Size(14, 13);
             this.radioButton8.TabIndex = 5;
             this.radioButton8.UseVisualStyleBackColor = true;
-            this.radioButton8.CheckedChanged += new System.EventHandler(this.RadioButton8_CheckedChanged);
+            this.radioButton8.Click += new System.EventHandler(this.RadioButton8_Click);
             // 
             // radioButton9
             // 
@@ -248,7 +250,7 @@
             this.radioButton9.Size = new System.Drawing.Size(14, 13);
             this.radioButton9.TabIndex = 5;
             this.radioButton9.UseVisualStyleBackColor = true;
-            this.radioButton9.CheckedChanged += new System.EventHandler(this.RadioButton9_CheckedChanged);
+            this.radioButton9.Click += new System.EventHandler(this.RadioButton9_Click);
             // 
             // label10
             // 
@@ -269,7 +271,7 @@
             this.radioButton10.Size = new System.Drawing.Size(14, 13);
             this.radioButton10.TabIndex = 6;
             this.radioButton10.UseVisualStyleBackColor = true;
-            this.radioButton10.CheckedChanged += new System.EventHandler(this.radioButton10_CheckedChanged);
+            this.radioButton10.Click += new System.EventHandler(this.radioButton10_Click);
             // 
             // label11
             // 
@@ -289,7 +291,7 @@
             this.radioButton11.Size = new System.Drawing.Size(14, 13);
             this.radioButton11.TabIndex = 8;
             this.radioButton11.UseVisualStyleBackColor = true;
-            this.radioButton11.CheckedChanged += new System.EventHandler(this.RadioButton11_CheckedChanged);
+            this.radioButton11.Click += new System.EventHandler(this.RadioButton11_Click);
             // 
             // Mean_Stress_Correction_Class
             // 

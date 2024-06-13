@@ -92,7 +92,7 @@
             this.radioButton5.Size = new System.Drawing.Size(14, 13);
             this.radioButton5.TabIndex = 2;
             this.radioButton5.UseVisualStyleBackColor = true;
-            this.radioButton5.CheckedChanged += new System.EventHandler(this.RadioButton5_CheckedChanged);
+            this.radioButton5.Click += new System.EventHandler(this.RadioButton5_Click);
             // 
             // radioButton4
             // 
@@ -102,7 +102,7 @@
             this.radioButton4.Size = new System.Drawing.Size(14, 13);
             this.radioButton4.TabIndex = 2;
             this.radioButton4.UseVisualStyleBackColor = true;
-            this.radioButton4.CheckedChanged += new System.EventHandler(this.RadioButton4_CheckedChanged);
+            this.radioButton4.Click += new System.EventHandler(this.RadioButton4_Click);
             // 
             // radioButton3
             // 
@@ -112,7 +112,7 @@
             this.radioButton3.Size = new System.Drawing.Size(14, 13);
             this.radioButton3.TabIndex = 2;
             this.radioButton3.UseVisualStyleBackColor = true;
-            this.radioButton3.CheckedChanged += new System.EventHandler(this.RadioButton3_CheckedChanged);
+            this.radioButton3.Click += new System.EventHandler(this.RadioButton3_Click);
             // 
             // radioButton2
             // 
@@ -122,7 +122,7 @@
             this.radioButton2.Size = new System.Drawing.Size(14, 13);
             this.radioButton2.TabIndex = 2;
             this.radioButton2.UseVisualStyleBackColor = true;
-            this.radioButton2.CheckedChanged += new System.EventHandler(this.RadioButton2_CheckedChanged);
+            this.radioButton2.Click += new System.EventHandler(this.RadioButton2_Click);
             // 
             // radioButton1
             // 
@@ -134,7 +134,7 @@
             this.radioButton1.TabIndex = 2;
             this.radioButton1.TabStop = true;
             this.radioButton1.UseVisualStyleBackColor = true;
-            this.radioButton1.CheckedChanged += new System.EventHandler(this.RadioButton1_CheckedChanged);
+            this.radioButton1.Click += new System.EventHandler(this.RadioButton1_Click);
             // 
             // label5
             // 

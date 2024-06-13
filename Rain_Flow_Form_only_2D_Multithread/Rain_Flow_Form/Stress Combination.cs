@@ -29,37 +29,44 @@ namespace Fatige_Stress_Counting_Tool
 
         private void Button1_Click(object sender, EventArgs e)
         {
-           Close();
+            Close();
         }
 
-        private void RadioButton1_CheckedChanged(object sender, EventArgs e)
+        // Sign equivalent (von Mises) stress:
+        private void RadioButton1_Click(object sender, EventArgs e)
         {
             Engine.Multiaxial_stress = StressCalculationTypeEnum.SignVonMises2D;
             Element_Property_Form.Delta_enable_Pr = false;
         }
 
-        private void RadioButton2_CheckedChanged(object sender, EventArgs e)
+        // Sign maximum shear stress:
+        private void RadioButton2_Click(object sender, EventArgs e)
         {
             Engine.Multiaxial_stress = StressCalculationTypeEnum.SignMaximumShearStress2D;
             Element_Property_Form.Delta_enable_Pr = false;
         }
 
-        private void RadioButton3_CheckedChanged(object sender, EventArgs e)
+        // Maximum principal stress:
+        private void RadioButton3_Click(object sender, EventArgs e)
         {
             Engine.Multiaxial_stress = StressCalculationTypeEnum.MaxPrincipal2D;
             Element_Property_Form.Delta_enable_Pr = false;
         }
 
-        private void RadioButton4_CheckedChanged(object sender, EventArgs e)
+        // Equivalent (von Mises) stress:
+        private void RadioButton4_Click(object sender, EventArgs e)
         {
             Engine.Multiaxial_stress = StressCalculationTypeEnum.EquivalentVonMisesStress2D;
             Element_Property_Form.Delta_enable_Pr = false;
         }
 
-        private void RadioButton5_CheckedChanged(object sender, EventArgs e)
+
+        // Critical plane:
+        private void RadioButton5_Click(object sender, EventArgs e)
         {
-            Engine.Multiaxial_stress = StressCalculationTypeEnum.CriticalPlane;
             Element_Property_Form.Delta_enable_Pr = true;
+
+            new CriticalPlane().Show();
         }
     }
 }

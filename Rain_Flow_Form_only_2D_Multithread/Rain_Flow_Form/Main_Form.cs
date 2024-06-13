@@ -144,8 +144,6 @@ namespace Fatige_Stress_Counting_Tool
 
         private void Run_Click(object sender, EventArgs e)
         {
-
-
             Engine.ConsoleShow = Show_Consol.Checked;
 
             if (!File.Exists(Engine.Report_File_Name))
@@ -153,7 +151,6 @@ namespace Fatige_Stress_Counting_Tool
                 MessageBox.Show("Select Report File !                                                  ", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
-
 
             if (!File.Exists(Engine.Ciclogramm_File_Name))
             {
@@ -166,14 +163,6 @@ namespace Fatige_Stress_Counting_Tool
                 MessageBox.Show("Select Path for Results !" + new string(' ', 50), "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
-
-
-            if (!Mean_Stress_Correction_Class.Choosing_equation_Pr)
-            {
-                MessageBox.Show("Choose one of equation !                                              ", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
-            }
-
 
 
             if (Engine.Stress_equation == MeanStressCorrectionEnum.Walker)
@@ -223,20 +212,26 @@ namespace Fatige_Stress_Counting_Tool
 
             if (StressType == StressTypeEnum.OneDimensional)
             {
-                Thread d_1 = new Thread(new ParameterizedThreadStart(engine_.Engine_for_1D));
-                d_1.Start(progressBar);
+                var thread = new Thread(new ParameterizedThreadStart(engine_.Engine_for_1D));
+                thread.Start(progressBar);
             }
             else if (StressType == StressTypeEnum.TwoDimensional)
             {
+
                 if (Engine.Multiaxial_stress == StressCalculationTypeEnum.CriticalPlane)
                 {
-                    Thread d_2 = new Thread(new ParameterizedThreadStart(engine_.Engine_for_2D_critical_plane));
-                    d_2.Start(progressBar);
+                    var thread = new Thread(new ParameterizedThreadStart(engine_.Engine_for_2D_critical_plane_CycleAngle));
+                    thread.Start(progressBar);
+                }
+                else if(Engine.Multiaxial_stress == StressCalculationTypeEnum.CyclogramCriticalPlane)
+                {
+                    var thread = new Thread(new ParameterizedThreadStart(engine_.Engine_for_2D_critical_plane_CycleAngle));
+                    thread.Start(progressBar);
                 }
                 else
                 {
-                    Thread d_2 = new Thread(new ParameterizedThreadStart(engine_.Engine_for_2D));
-                    d_2.Start(progressBar);
+                    var thread = new Thread(new ParameterizedThreadStart(engine_.Engine_for_2D));
+                    thread.Start(progressBar);
                 }
             }
         }

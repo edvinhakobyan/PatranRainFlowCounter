@@ -57,8 +57,6 @@ namespace Fatige_Stress_Counting_Tool
 
         private void Element_Property_Form_Load(object sender, EventArgs e)
         {
-            Delta_angle.Enabled = delta_enable;
-
             foreach (TabPage a in tabControl.TabPages)
             {
                 if (!(a.Controls["Elm_list"].Enabled = elm_list_enable))
@@ -399,27 +397,7 @@ namespace Fatige_Stress_Counting_Tool
                 }
             }
 
-
-            if (Delta_angle.Enabled)
-            {
-                if (Delta_angle.Text == "")
-                {
-                    MessageBox.Show("Angular iteration step is empty");
-                    return;
-                }
-                else
-                {
-                    Engine.Delta = double.Parse(Delta_angle.Text);
-                }
-            }
-
-
-            //dic = dic.OrderBy(x => x.Key).ToDictionary(x => x.Key, x => x.Value);
-
             Engine.Elm_prop = dic;
-
-            if(Delta_angle.Enabled)
-            Engine.Delta = double.Parse(Delta_angle.Text);
 
             Close();
         }
@@ -460,14 +438,6 @@ namespace Fatige_Stress_Counting_Tool
                 char_count = 0;
             }
             return elem_id;
-        }
-
-        private void Delta_angle_TextChanged(object sender, EventArgs e)
-        {
-            if (!double.TryParse(Delta_angle.Text, out double a) && Delta_angle.Text != "")
-            {
-                Delta_angle.Clear();
-            }
         }
     }
 }

@@ -29,8 +29,8 @@ namespace Fatige_Stress_Counting_Tool
         public static bool ConsoleShow { get; set; }
         public static string Ciclogramm_File_Name { get; set; }
         public static string Temporary_File_Name { get; set; }
-        public static MeanStressCorrectionEnum Stress_equation { get; set; }
-        public static StressCalculationTypeEnum Multiaxial_stress { get; set; }
+        public static MeanStressCorrectionEnum Stress_equation { get; set; } = MeanStressCorrectionEnum.Cai;
+        public static StressCalculationTypeEnum Multiaxial_stress { get; set; } = StressCalculationTypeEnum.MaxPrincipal2D;
         public static CycleCountingAlgoritm Cycle_method { get; set; } = CycleCountingAlgoritm.RainFlow;
         public static Dictionary<int, double[]> Elm_prop { get; set; } = new Dictionary<int, double[]>();
 
@@ -366,7 +366,7 @@ namespace Fatige_Stress_Counting_Tool
             File.Delete(Temporary_File_Name);
             Console.WriteLine("\nEnd Solving.\nElapsed Time " + (DateTime.Now - time));
         }
-        public void Engine_for_2D_critical_plane_(object pBar)
+        public void Engine_for_2D_critical_plane_Incremental(object pBar)
         {
             var progressBar = pBar as ProgressBar;
 
@@ -618,7 +618,7 @@ namespace Fatige_Stress_Counting_Tool
             File.Delete(Temporary_File_Name);
             Console.WriteLine("\nEnd Solving.\nElapsed Time " + (DateTime.Now - time));
         }
-        public void Engine_for_2D_critical_plane(object pBar)
+        public void Engine_for_2D_critical_plane_CycleAngle(object pBar)
         {
             var progressBar = pBar as ProgressBar;
 
@@ -762,28 +762,28 @@ namespace Fatige_Stress_Counting_Tool
                 {
                     case CycleCountingAlgoritm.RainFlow:
                         {
+                            int cycl_matrix_rows = cycl_matrix.GetLength(0);
+                            int cycl_matrix_cols = cycl_matrix.GetLength(1);
+
+                            #region Z1
                             var anglesZ1 = Multiaxial_stress_cycle_2D(cycl_matrix, z1_stress).Distinct().ToArray();
 
                             var maxEqvZ1 = 0.0;
                             var maxEqvAngleZ1 = 0.0;
 
-
+                            int z1_stress_cols = z1_stress.GetLength(1);
                             Parallel.ForEach(anglesZ1, (angle) =>
                             {
-                                double[] stresses_cycle = new double[cycl_matrix.GetLength(0)];
-
-                                int a_rows = cycl_matrix.GetLength(0);
-                                int a_cols = cycl_matrix.GetLength(1);
-                                int b_cols = z1_stress.GetLength(1);
+                                double[] stresses_cycle = new double[cycl_matrix_rows];
 
                                 var stressForRF = new List<double>();
-                                for (int r = 0; r < a_rows; r++)
+                                for (int r = 0; r < cycl_matrix_rows; r++)
                                 {
-                                    double[] stress_component = new double[b_cols]; // b_cols - stress component count
+                                    double[] stress_component = new double[z1_stress_cols]; // b_cols - stress component count
 
-                                    for (int j = 0; j < b_cols; j++)
+                                    for (int j = 0; j < z1_stress_cols; j++)
                                     {
-                                        for (int k = 0; k < a_cols; k++)
+                                        for (int k = 0; k < cycl_matrix_cols; k++)
                                         {
                                             stress_component[j] += cycl_matrix[r, k] * z1_stress[k, j];
                                         }
@@ -807,29 +807,27 @@ namespace Fatige_Stress_Counting_Tool
                             stressToFile.Add(maxEqvZ1 * Math.Cos(maxEqvAngleZ1)); //maxEqvZ1-x component
                             stressToFile.Add(maxEqvZ1 * Math.Sin(maxEqvAngleZ1)); //maxEqvZ1-y component
                             stressToFile.Add(0.0);                                //maxEqvZ1-z component
+                            #endregion
 
-
+                            #region Z0
                             var anglesZ0 = Multiaxial_stress_cycle_2D(cycl_matrix, z0_stress).Distinct().ToArray();
 
                             var maxEqvZ0 = 0.0;
                             var maxEqvAngleZ0 = 0.0;
 
+                            int z0_stress_cols = z0_stress.GetLength(1);
                             Parallel.ForEach(anglesZ0, (angle) =>
                             {
-                                double[] stresses_cycle = new double[cycl_matrix.GetLength(0)];
-
-                                int a_rows = cycl_matrix.GetLength(0);
-                                int a_cols = cycl_matrix.GetLength(1);
-                                int b_cols = z0_stress.GetLength(1);
+                                double[] stresses_cycle = new double[cycl_matrix_rows];
 
                                 var stressForRF = new List<double>();
-                                for (int r = 0; r < a_rows; r++)
+                                for (int r = 0; r < cycl_matrix_rows; r++)
                                 {
-                                    double[] stress_component = new double[b_cols]; // b_cols - stress component count
+                                    double[] stress_component = new double[z0_stress_cols]; // b_cols - stress component count
 
-                                    for (int j = 0; j < b_cols; j++)
+                                    for (int j = 0; j < z0_stress_cols; j++)
                                     {
-                                        for (int k = 0; k < a_cols; k++)
+                                        for (int k = 0; k < cycl_matrix_cols; k++)
                                         {
                                             stress_component[j] += cycl_matrix[r, k] * z0_stress[k, j];
                                         }
@@ -853,28 +851,27 @@ namespace Fatige_Stress_Counting_Tool
                             stressToFile.Add(maxEqvZ0 * Math.Cos(maxEqvAngleZ0)); //maxEqvZ0-x component
                             stressToFile.Add(maxEqvZ0 * Math.Sin(maxEqvAngleZ0)); //maxEqvZ0-y component
                             stressToFile.Add(0.0);                                //maxEqvZ0-z component
+                            #endregion
 
+                            #region Z2
                             var anglesZ2 = Multiaxial_stress_cycle_2D(cycl_matrix, z2_stress).Distinct().ToArray();
 
                             var maxEqvZ2 = 0.0;
                             var maxEqvAngleZ2 = 0.0;
 
+                            int z2_stress_cols = z2_stress.GetLength(1);
                             Parallel.ForEach(anglesZ2, (angle) =>
                             {
-                                double[] stresses_cycle = new double[cycl_matrix.GetLength(0)];
-
-                                int a_rows = cycl_matrix.GetLength(0);
-                                int a_cols = cycl_matrix.GetLength(1);
-                                int b_cols = z2_stress.GetLength(1);
+                                double[] stresses_cycle = new double[cycl_matrix_rows];
 
                                 var stressForRF = new List<double>();
-                                for (int r = 0; r < a_rows; r++)
+                                for (int r = 0; r < cycl_matrix_rows; r++)
                                 {
-                                    double[] stress_component = new double[b_cols]; // b_cols - stress component count
+                                    double[] stress_component = new double[z2_stress_cols]; // b_cols - stress component count
 
-                                    for (int j = 0; j < b_cols; j++)
+                                    for (int j = 0; j < z2_stress_cols; j++)
                                     {
-                                        for (int k = 0; k < a_cols; k++)
+                                        for (int k = 0; k < cycl_matrix_cols; k++)
                                         {
                                             stress_component[j] += cycl_matrix[r, k] * z2_stress[k, j];
                                         }
@@ -898,6 +895,7 @@ namespace Fatige_Stress_Counting_Tool
                             stressToFile.Add(maxEqvZ2 * Math.Cos(maxEqvAngleZ2)); //maxEqvZ2-x component
                             stressToFile.Add(maxEqvZ2 * Math.Sin(maxEqvAngleZ2)); //maxEqvZ2-y component
                             stressToFile.Add(0.0);                                //maxEqvZ2-z component
+                            #endregion
                         }
                         break;
                     case CycleCountingAlgoritm.FullCycle:
@@ -999,7 +997,7 @@ namespace Fatige_Stress_Counting_Tool
                     case StressCalculationTypeEnum.EquivalentVonMisesStress2D:
                         stresses_cycle[i] = Equivalent_von_mises_stress(stress_component[0], stress_component[1], stress_component[2]);
                         break;
-                    case StressCalculationTypeEnum.CriticalPlane: //Return angles
+                    case StressCalculationTypeEnum.CyclogramCriticalPlane: //Return angles
                         stresses_cycle[i] = 0.5 * Math.Atan(2.0 * stress_component[2] / (stress_component[0] - stress_component[1]));
                         break;
                     default: MessageBox.Show("Select one of 2D methods"); break;

@@ -9,7 +9,7 @@ using System.Resources;
 [assembly: AssemblyTitle("Fatigue stress counting tool.")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Progresstech Aremenia")]
+[assembly: AssemblyCompany("Progresstech-Aremenia")]
 [assembly: AssemblyProduct("Fatigue stress counting tool.")]
 [assembly: AssemblyCopyright("Created by Edvin Hakobyan.")]
 [assembly: AssemblyTrademark("")]
@@ -33,6 +33,6 @@ using System.Resources;
 // Можно задать все значения или принять номер построения и номер редакции по умолчанию, 
 // используя "*", как показано ниже:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("1.0.0.0")]
+[assembly: AssemblyVersion("1.0.0.2")]
 [assembly: AssemblyFileVersion("1.0.0.0")]
 [assembly: NeutralResourcesLanguageAttribute("")]
